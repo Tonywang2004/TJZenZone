@@ -31,10 +31,10 @@ const user = useUser();
 const router = useRouter();
 const menus = [
     { title: '首页', name: 'about' },
-    { title: '实时AI对话', name: 'apply' },
-    { title: '解压小游戏', name: 'news' },
-    { title: '心理小测试', name: 'contact' },
-    { title: '解压白噪声', name: 'donation' },
+    { title: '实时AI对话', name: 'AIchat' },
+    { title: '解压小游戏', name: 'game' },
+    { title: '心理小测试', name: 'personalitytest' },
+    { title: '解压白噪声', name: 'whitenoise' },
 ]
 const handleAvatarClick = () => {
     if (!user.loggedIn) {

@@ -1,10 +1,10 @@
 import AboutView from '@/views/about/AboutView.vue'
-import ApplyView from '@/views/apply/ApplyView.vue'
-import ContactView from '@/views/contact/ContactView.vue'
-import DonationView from '@/views/donation/DonationView.vue'
+import ApplyView from '@/views/AIchat/ApplyView.vue'
+import ContactView from '@/views/personalitytest/ContactView.vue'
+import DonationView from '@/views/whitenoise/DonationView.vue'
 import LoginView from '@/views/login/LoginView.vue'
-import NewsDetailView from '@/views/news/NewsDetailView.vue'
-import NewsView from '@/views/news/NewsView.vue'
+import NewsDetailView from '@/views/game/NewsDetailView.vue'
+import NewsView from '@/views/game/NewsView.vue'
 import UserView from '@/views/user/UserView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -26,7 +26,7 @@ const router = createRouter({
                     component: AboutView,
                 },
                 {
-                    name: 'apply',
+                    name: 'AIchat',
                     meta: {
                         title: '实时AI对话',
                     },
@@ -34,7 +34,7 @@ const router = createRouter({
                     component: ApplyView,
                 },
                 {
-                    name: 'news',
+                    name: 'game',
                     meta: {
                         title: '解压小游戏',
                     },
@@ -50,15 +50,15 @@ const router = createRouter({
                     component: NewsDetailView,
                 },
                 {
-                    name: 'contact',
+                    name: 'personalitytest',
                     meta: {
                         title: '心理小测试',
                     },
-                    path: 'test',
+                    path: 'personalitytest',
                     component: ContactView,
                 },
                 {
-                    name: 'donation',
+                    name: 'whitenoise',
                     meta: {
                         title: '解压白噪声',
                     },

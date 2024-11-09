@@ -9,7 +9,7 @@ import UserView from '@/views/user/UserView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
-    history: createWebHashHistory('/faa'),
+    history: createWebHashHistory(),
     routes: [
         {
             name: 'home',
@@ -28,23 +28,23 @@ const router = createRouter({
                 {
                     name: 'apply',
                     meta: {
-                        title: 'Apply',
+                        title: '实时AI对话',
                     },
-                    path: 'apply',
+                    path: 'AIchat',
                     component: ApplyView,
                 },
                 {
                     name: 'news',
                     meta: {
-                        title: 'News & Insights',
+                        title: '解压小游戏',
                     },
-                    path: 'news',
+                    path: 'game',
                     component: NewsView,
                 },
                 {
                     name: 'newsDetail',
                     meta: {
-                        title: 'News & Insights',
+                        title: '解压小游戏',
                     },
                     path: 'news/:id',
                     component: NewsDetailView,
@@ -52,17 +52,17 @@ const router = createRouter({
                 {
                     name: 'contact',
                     meta: {
-                        title: 'Contact Us',
+                        title: '心理小测试',
                     },
-                    path: 'contact',
+                    path: 'test',
                     component: ContactView,
                 },
                 {
                     name: 'donation',
                     meta: {
-                        title: 'Donation',
+                        title: '解压白噪声',
                     },
-                    path: 'donation',
+                    path: 'whitenoise',
                     component: DonationView,
                 },
             ],

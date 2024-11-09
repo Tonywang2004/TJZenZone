@@ -1,8 +1,8 @@
 <template>
     <div class="border-0 border-b-[1px] border-b-default border-solid">
-        <div class="w-[1200px] h-[70px] mx-auto flex items-center">
+        <div class="header">
             <RouterLink :to="{ name: 'home' }">
-                <img class='w-[183px] h-full object-cover cursor-pointer block' :src="logo" />
+                <img class='headimage' :src="logo" />
             </RouterLink>
             <div class="flex-1 flex justify-end h-full">
                 <div class="flex gap-[48px] h-full items-center">
@@ -30,11 +30,11 @@ import { useRouter } from 'vue-router';
 const user = useUser();
 const router = useRouter();
 const menus = [
-    { title: 'About FAA', name: 'about' },
-    { title: 'Apply', name: 'apply' },
-    { title: 'News & Insights', name: 'news' },
-    { title: 'Contact Us', name: 'contact' },
-    { title: 'Donation', name: 'donation' },
+    { title: '首页', name: 'about' },
+    { title: '实时AI对话', name: 'apply' },
+    { title: '解压小游戏', name: 'news' },
+    { title: '心理小测试', name: 'contact' },
+    { title: '解压白噪声', name: 'donation' },
 ]
 const handleAvatarClick = () => {
     if (!user.loggedIn) {
@@ -43,3 +43,17 @@ const handleAvatarClick = () => {
     }
 }
 </script>
+<style scoped>
+.headimage{
+    width:183px;
+    height: 70px;
+    filter: invert(1);
+}
+.header{
+    width: 1200px;
+    height: 80px;
+    margin:0 auto;
+    display:flex;
+    align-self:center;
+}
+</style>

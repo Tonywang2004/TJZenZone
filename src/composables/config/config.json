@@ -1,171 +1,63 @@
 {
     "$schema": "./faa.schema.json",
     "about": {
-        "title": "FUTURISM AI AWARD",
-        "subtitle": "FOR YOUNG INNOVATORS AND SCIENTISTS",
-        "poster": "/faa/src/assets/placeholder1.png",
+        "title": "ZenZone",
+        "subtitle": "让压力释放，休闲就在这里。",
+        "poster": "/faa/src/assets/HeroImage.jpg",
         "blocks": [
             {
                 "type": "about",
                 "data": {
-                    "title": "ABOUT FAA",
-                    "content": "Futurism AI society is a yearly competition that focuses on excellence in science, mathematics and technology, providing young people with the opportunity to compete in individual innovation and team research in regional and national platforms.\n\nBy participating in Futurism AI society, students can immerse themselves in rigorous scientific research, gain the excitement of new discoveries, and reap personal achievement and satisfaction as they complete their projects. Our vision is to find and develop the most talented students to succeed in science, mathematics and technology to create a better future.\n\nFounded in 2020, we are an interdisciplinary AI enterprise dedicated to the excellence of Natural Science, Mathematics, Technology, Engineering, and Computer Science. We aimed to incorporate our awards that extend the impact of the AI subjects, and allow students and the public to engage with state of the art topics in the sciences.\n\nWe uphold an inclusive and interdisciplinary approach towards AI and reward exceptional students across disciplines. In our era, never has our mission been more signifiant. We are raising awareness for minorities and inclusion in the AI community, helping students to become enthusiasts and visionaries of the future who can address the greatest challenges of our time through power of technology.\n\nThe Futurism AI Society supports young scholars from across the globe, to provide a new platform and awards for not just the exceptional, but the responsible researchers whose work can greater impacts on society. We will do everything we can to engage all people, across ideologies, nationalities, ethnicities, class, religion, and beyond.",
-                    "image": "/faa/src/assets/placeholder2.png"
-                }
+                    "title": "关于ZenZone",
+                    "content": "“ZenZone——禅意地带”旨在通过一系列互动功能和解压游戏，为用户提供放松、愉悦的数字解压体验。项目基于Web端开发，结合一系列如：实时AI对话、音乐放松、励志语录、休闲游戏（互动游戏）等功能。为用户提供一个综合的情感支持和休闲娱乐平台，帮助他们在繁忙的生活中找到放松和治愈的空间。同时，项目支持为专业的相关领域研究者（心理医生、学者）提供可视化、结构化的数据支持，以帮助他们在数据分析和用户情绪健康方面开展深入研究，为用户提供更多科学依据和有效的情绪管理建议。"                }
             },
             {
-                "type": "why-us",
+                "type": "purpose",
                 "data": {
-                    "title": "WHY US",
+                    "title": "我能得到什么",
                     "items": [
                         {
                             "image": "/faa/src/assets/placeholder3.png",
-                            "content": "Hong Kong TSAF Consulting Ltd. is at the forefront of technological innovation with the Futurism AI Award (FAA), designed to ignite the innovative spirit of youth worldwide. Our mission transcends showcasing technological marvels; we are committed to cultivating a generation of innovators who are encouraged to explore and evolve their talents within a framework of diversity in thought, fairness, and community building. We adhere to the highest standards of integrity, transparency, and independence, ensuring a fair and objective evaluation of all submissions."
-                        },
+                            "title":"作为一个普通用户",
+                            "content": "1.创建一个个人账户保存个人信息。\n2.通过一系列互动功能和解压游戏，释放个人压力，缓解疲劳。\n3.查看个人信息报告，追踪个人心态和压力变化。"
+                            },
                         {
                             "image": "/faa/src/assets/placeholder4.png",
-                            "content": "FAA winners are heralded on a global stage, receiving extensive media exposure and having their projects promoted across various platforms. Each laureate is awarded a certificate of achievement and letters of recommendation, underscoring their professional and academic prospects within an esteemed network of technological pioneers."
-                        },
-                        {
-                            "image": "/faa/src/assets/placeholder5.png",
-                            "content": "Our 2024 judge panel is a diverse assembly of AI field experts, distinguished professors, and engineers from leading companies. This eclectic mix ensures a comprehensive evaluation process, reflecting a broad spectrum of perspectives and expertise, dedicated to nurturing talent with integrity and innovation."
+                            "title":"作为一个相关研究者", 
+                            "content": "1.能够访问平台的用户情绪数据和使用行为的可视化图表。\n2.能生成匿名用户行为报告。\n3.能管理用户数据、内容推荐，为用户提供高质量的内容。"
                         }
                     ]
                 }
             },
             {
-                "type": "category",
+                "type": "functions",
                 "data": {
-                    "title": "CATEGORIES",
+                    "title": "我能体验什么",
                     "items": [
                         {
-                            "image": "/faa/src/assets/placeholder6.png",
-                            "poster": "/faa/src/assets/placeholder7.png",
-                            "title": "AI",
-                            "content": "Participants can choose a statistics project, or an applied mathematics project, or a pure mathematics project.\n\nParticipants can choose to submit a research paper, and if appropriate, with video, image or other PDF supplements.\n\nParticipants can choose any topic of their choice, and the paper should demonstrate the participant’s original idea and the warrants for a specific thesis.\n\nFor example, participants can use mathematical knowledge to model the spread of COVID-19 in a modern large city and offer the best times and methods to interrupt rapid spread."
+                            "image": "/faa/src/assets/AIchat.png",
+                            "poster": "/faa/src/assets/AIposter.png",
+                            "title": "AI实时对话",
+                            "content": "AI实时对话可以提供即时的情感支持、无压力的互动体验以及无时无刻的陪伴,为用户提供情绪疏导和心理支持，帮助缓解压力、放松心情，提升情绪稳定性。"
+                       },
+                        {
+                            "image": "/faa/src/assets/game.jpg",
+                            "poster": "/faa/src/assets/gameposter.png",
+                            "title": "解压小游戏",
+                            "content": "解压小游戏通过简单、愉悦和富有反馈性的游戏机制，帮助用户暂时脱离压力环境，缓解紧张情绪，也可以把注意力从压力源上转移开来。"
+                       },
+                        {
+                            "image": "/faa/src/assets/test.png",
+                            "poster": "/faa/src/assets/testposter.png",
+                            "title": "心理小测试",
+                            "content": "心理小测试通过一系列精心设计的问题，对用户的个性特征、情绪状态、兴趣偏好等方面进行评估，基于心理学理论和统计学分析帮助用户了解自己，为情绪管理和行为改善提供指导。"
                         },
                         {
-                            "image": "/faa/src/assets/placeholder6.png",
-                            "poster": "/faa/src/assets/placeholder7.png",
-                            "title": "AI",
-                            "content": "Participants can choose a statistics project, or an applied mathematics project, or a pure mathematics project.\n\nParticipants can choose to submit a research paper, and if appropriate, with video, image or other PDF supplements.\n\nParticipants can choose any topic of their choice, and the paper should demonstrate the participant’s original idea and the warrants for a specific thesis.\n\nFor example, participants can use mathematical knowledge to model the spread of COVID-19 in a modern large city and offer the best times and methods to interrupt rapid spread."
-                        },
-                        {
-                            "image": "/faa/src/assets/placeholder6.png",
-                            "poster": "/faa/src/assets/placeholder7.png",
-                            "title": "AI",
-                            "content": "Participants can choose a statistics project, or an applied mathematics project, or a pure mathematics project.\n\nParticipants can choose to submit a research paper, and if appropriate, with video, image or other PDF supplements.\n\nParticipants can choose any topic of their choice, and the paper should demonstrate the participant’s original idea and the warrants for a specific thesis.\n\nFor example, participants can use mathematical knowledge to model the spread of COVID-19 in a modern large city and offer the best times and methods to interrupt rapid spread."
-                        }
-                    ]
-                }
-            },
-            {
-                "type": "winners",
-                "data": {
-                    "title": "WINNER",
-                    "items": [
-                        {
-                            "year": "2024",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        },
-                        {
-                            "year": "2023",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        },
-                        {
-                            "year": "2022",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        },
-                        {
-                            "year": "2021",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        },
-                        {
-                            "year": "2020",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        },
-                        {
-                            "year": "2019",
-                            "awards": [
-                                {
-                                    "type": "gold",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "silver",
-                                    "name": "Brooke Thomas"
-                                },
-                                {
-                                    "type": "bronze",
-                                    "name": "Brooke Thomas"
-                                }
-                            ]
-                        }
+                            "image": "/faa/src/assets/whitenoise.png",
+                            "poster": "/faa/src/assets/whitenoiseposter.png",
+                            "title": "解压白噪声",
+                            "content": "解压白噪声通过稳定、平缓的音频刺激来安抚神经系统，减轻压力和焦虑，同时通过掩盖噪音、平稳情绪、联想到自然环境等方式，为听者带来心理上的平静和身体上的放松效果。"
+                       }
                     ]
                 }
             }
@@ -231,25 +123,15 @@
         "content": "<div style=\"display: flex; flex-direction: column; gap: 32px;\"><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">Support the Future of Innovation and Talent</div><div style=\"color: rgb(86, 98, 115); font-size: 15px;\">Hong Kong TSAF Consulting Ltd.warmly invites you to support the Futurism AI Award(FAA),Dynamic Art Award(DAA),and Cosmopolitan Writing Award(CWA),together shaping the future of technology,art,and literature.</div></div><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">Your Impact</div><div style=\"color: rgb(86, 98, 115); font-size: 15px;\">At the heart of our efforts is the vision to foster a new generation of innovators,artists,and writers who can think diversely,act fairly,and contribute to their communities.By donating to these awards,you're not just funding a prize; you're investing in the future leaders of innovation,art,and literature.</div></div><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">Awards&Recognition</div><div style=\"color: rgb(86, 98, 115); font-size: 15px;\">Winners of these prestigious awards Winners of these prestigious awards gain global recognition,media exposure,and opportunities for professional and academic advancement.Your donation directly contributes to the certificates of achievement,letters of recommendation,and promotion of their innovative work.</div></div><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">How to Donate</div><div style=\"color: rgb(86, 98, 115); font-size: 15px;\">Initiate Your Contribution:To support the Futurism AI Award(FAA),Dynamic Art Award(DAA),or the Cosmopolitan Writing Award(CWA),simply send us an email expressing your interest in donating.Whether you wish to contribute to a specific award or to the general fund affecting all awards,your support is invaluable.Contact Us:Email us at[support@FuturismAI.Com]with the subject line\"Donation Inquiry.\"Please include your name,contact information,and any specific award you're interested in supporting or if you'd prefer to contribute to the general fund.Personalized Support:Our dedicated support team will get back to you promptly to guide you through the donation process.We're here to ensure your contribution is processed smoothly and to answer any questions you may have about the impact of your donation.</div></div></div>"
     },
     "footer": {
-        "email": "registration@FuturismAI.Com",
         "links": [
             {
-                "title": "Massachusetts Institute of Technology",
-                "href": "https://www.mit.edu/"
+                "title": "同济大学官网",
+                "href": "https://www.tongji.edu.cn/"
             },
             {
-                "title": "California Institute of Technology",
-                "href": "https://www.caltech.edu/"
-            },
-            {
-                "title": "Stanford University",
-                "href": "https://www.stanford.edu/"
-            },
-            {
-                "title": "Harvard University",
-                "href": "https://www.harvard.edu/"
+                "title": "本项目github地址",
+                "href": "https://github.com/Tonywang2004/TJZenZone/"
             }
-        ],
-        "copyright": "Copyright © 2024. FUTURISM AI AWARD All Rights Reserved."
+        ]
     }
 }

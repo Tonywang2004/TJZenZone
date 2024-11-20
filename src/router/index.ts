@@ -1,6 +1,6 @@
 import AboutView from '@/views/about/AboutView.vue'
 import ApplyView from '@/views/AIchat/ApplyView.vue'
-import ContactView from '@/views/personalitytest/ContactView.vue'
+import ContactView from '@/views/personalitytest/TestView.vue'
 import DonationView from '@/views/whitenoise/DonationView.vue'
 import LoginView from '@/views/login/LoginView.vue'
 import NewsDetailView from '@/views/game/NewsDetailView.vue'

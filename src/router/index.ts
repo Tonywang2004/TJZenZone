@@ -1,7 +1,7 @@
 import AboutView from '@/views/about/AboutView.vue'
 import ApplyView from '@/views/AIchat/ApplyView.vue'
 import ContactView from '@/views/personalitytest/ContactView.vue'
-import DonationView from '@/views/whitenoise/DonationView.vue'
+import Whitenoise from '@/views/whitenoise/Whitenoise.vue'
 import LoginView from '@/views/login/LoginView.vue'
 import NewsDetailView from '@/views/game/NewsDetailView.vue'
 import NewsView from '@/views/game/NewsView.vue'
@@ -63,7 +63,7 @@ const router = createRouter({
                         title: '解压白噪声',
                     },
                     path: 'whitenoise',
-                    component: DonationView,
+                    component: Whitenoise,
                 },
             ],
         },

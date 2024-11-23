@@ -26,9 +26,9 @@
             <el-button type="primary" v-if="auto==='手动发送'" @click="sendmessage">发送</el-button>
             <el-button type="primary" @click="savemessage">保存对话</el-button>
             <el-button type="primary" @click="showmessage">查看上一次对话</el-button>
-            <div v-if="auto==='手动发送'">
+            <div>
               <p></p>
-              <el-input v-model="result" style="width: 100%" placeholder="Please input" />
+              <el-input v-model="result" :disabled="auto==='自动发送'" style="width: 100%" placeholder="Please input" />
             </div>
         </div>
     </div>

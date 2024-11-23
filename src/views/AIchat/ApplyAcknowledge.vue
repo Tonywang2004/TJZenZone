@@ -6,7 +6,9 @@
                 {{ config.apply.title }}
             </div>
         </div>
-        <p></p>
+        <div class="flex text-[16px] font-bold leading-none ml-[60px]">
+          <p>当前用户:{{username}}</p>
+        </div>
         <div class="chat-container">
             <div class="chat-item">
                 <div class="chat-answer">
@@ -22,6 +24,8 @@
             <el-button type="primary" id="start-btn" @click="startRecognition">开始语音输入</el-button>
             <el-button type="primary" @click="changemethod">{{auto}}</el-button>
             <el-button type="primary" v-if="auto==='手动发送'" @click="sendmessage">发送</el-button>
+            <el-button type="primary" @click="savemessage">保存对话</el-button>
+            <el-button type="primary" @click="showmessage">查看上一次对话</el-button>
             <div v-if="auto==='手动发送'">
               <p></p>
               <el-input v-model="result" style="width: 100%" placeholder="Please input" />
@@ -33,11 +37,14 @@
 import { useConfig } from '@/composables/config';
 import {ref} from 'vue'
 import axios from 'axios'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 const start="你好！有什么我能帮助你的吗？\n"
 const auto=ref("自动发送")
+const username=ref("123")
 //添加信息使用.push
 const messages=ref([
-        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "system", "content": "请告诉我你遇到的问题，我会尽力为你提供帮助。"},
       ])
 console.log(messages)
 const config = useConfig();
@@ -96,6 +103,64 @@ const sendmessage=()=>{
   })
 
 }
+
+const savemessage=()=>{
+  // 转换成字符串
+  const messageString = messages.value
+    .map(item => `${item.role}: ${item.content}`) // 将每个对象变成 "role: content" 格式
+    .join("\n"); // 用换行符拼接成一个完整的字符串
+  axios.post("http://localhost:9000/chat/add",{username:username.value,chatmessage:messageString}).then(res=>{
+    if (res.status === 200){
+      ElMessageBox.alert('已经保存', '提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          ElMessage({
+            type: 'info',
+            message: `已保存至用户名:${username.value} `,
+          })
+        },
+      })
+    }
+    else{
+      ElMessageBox.alert('保存出错', '提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          ElMessage({
+            type: 'error',
+            message: `错误`,
+          })
+        },
+      })
+    }
+  })
+}
+
+const showmessage=()=>{
+  axios.post("http://localhost:9000/chat/get",{username:username.value}).then(res=>{
+    if (res.status === 200){
+      ElMessageBox.alert("上一次对话如下：\n"+res.data, '查看', {
+        confirmButtonText: '确定',
+        callback: () => {
+          ElMessage({
+            type: 'success',
+            message: `已成功查询 `,
+          })
+        },
+      })
+    }
+    else{
+      ElMessageBox.alert('提取错误，未找到上一次对话', '提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          ElMessage({
+            type: 'error',
+            message: `错误`,
+          })
+        },
+      })
+    }
+  })
+}
 </script>
 <style lang="less" scoped>
 :deep(.my-content) {
@@ -139,5 +204,8 @@ const sendmessage=()=>{
   padding: 8px;
   max-width: 80%; /* 确保内容不超过屏幕宽度 */
   word-break: break-all; /* 长单词自动换行 */
+}
+.dialog-footer {
+  text-align: right;
 }
 </style>

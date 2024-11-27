@@ -20,15 +20,29 @@
             <div class="chat-ask" v-if="message.role==='user'">{{ message.content }}</div>
             <!-- AI 回复的消息 -->
             <div class="chat-answer" v-if="message.role==='system'">{{ message.content }}</div>
+            <!-- 渲染与消息对应的音频 -->
+            <audio controls v-if="index===0">
+              <source src="./start.wav" type="audio/wav"/>
+            </audio>
+            <div v-for="(src,index1) in audiourllist" :key="index1">
+            <!-- 保证audioRef存在可以执行push，第一个不显示，只显示第二个，可能算一个bug -->
+              <audio ref="audioRef" controls style="display: none;">
+              </audio>
+              <audio v-if="message.role==='system'&& index!=0 && index1*2===index" :src="src.src" 
+              controls
+              autoplay
+              >
+              </audio>
             </div>
+           </div>
             <el-button type="primary" id="start-btn" @click="startRecognition">开始语音输入</el-button>
             <el-button type="primary" @click="changemethod">{{auto}}</el-button>
             <el-button type="primary" v-if="auto==='手动发送'" @click="sendmessage">发送</el-button>
             <el-button type="primary" @click="savemessage">保存对话</el-button>
             <el-button type="primary" @click="showmessage">查看上一次对话</el-button>
-            <div v-if="auto==='手动发送'">
+            <div>
               <p></p>
-              <el-input v-model="result" style="width: 100%" placeholder="Please input" />
+              <el-input v-model="result" :disabled="auto==='自动发送'" style="width: 100%" placeholder="Please input" />
             </div>
         </div>
     </div>
@@ -46,7 +60,50 @@ const username=ref("123")
 const messages=ref([
         {"role": "system", "content": "请告诉我你遇到的问题，我会尽力为你提供帮助。"},
       ])
-console.log(messages)
+const audiourllist=ref([
+  {"src":"null"},
+])
+const audioBlob = ref<Blob | null>(null);
+const audioUrl = ref<string | null>(null);
+
+// 音频 DOM 元素
+const audioRef = ref<HTMLAudioElement | null>(null);
+
+// 获取音频流并播放
+const fetchAndPlayAudio = async (resulttext) => {
+  try {
+    const response = await axios.post("http://127.0.0.1:9880",{
+    "refer_wav_path": "nahida.wav",
+    "prompt_text": "初次见面，我已经关注你很久了。",
+    "prompt_language": "zh",
+    "text":resulttext,
+    "text_language": "zh"
+    }, { responseType: "arraybuffer" });
+    if (response.status===400) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log(response);
+
+    // 转换为 Blob
+    audioBlob.value = new Blob([response.data], { type: "audio/wav" });
+
+    // 创建 Blob URL
+    audioUrl.value = URL.createObjectURL(audioBlob.value);
+
+    console.log(audioRef.value);
+    // 播放音频
+    if (audioRef.value) {
+      audioRef.value.src = audioUrl.value;
+      audiourllist.value.push({"src":audioUrl.value});
+      console.log(audiourllist.value);
+      await audioRef.value.play();
+      console.log("音频播放成功");
+    }
+  } catch (error) {
+    console.error("获取或播放音频失败:", error);
+  }
+};
+
 const config = useConfig();
 const result=ref("");
 // 检查浏览器是否支持 SpeechRecognition
@@ -64,13 +121,20 @@ if (recognitionSupported) {
       result.value = "正在识别";
       recognition.onresult = (event: { results: { transcript: any; }[][]; }) => {
         const speechResult = event.results[0][0].transcript;
-        result.value = speechResult
+        result.value = speechResult;
+        sendmessage();
      };
-     //对话传入后端并在添加
-    //  const responce=axios.post("");
-    //  messages[messages.length-1].answer=responce.data;
+
       recognition.onerror = (event) => {
-        result.value = '发生错误：${event.error}'
+        ElMessageBox.alert('存在错误', '提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          ElMessage({
+            type: 'error',
+            message: `${event.error} `,
+          })
+        },
+      })
       };
     };
   }
@@ -97,6 +161,7 @@ const sendmessage=()=>{
 
   axios.post("http://localhost:9000/chat/send",messages.value).then(res=>{
     messages.value.push({"role": "system", "content": res.data});
+    fetchAndPlayAudio(res.data)
     console.log(messages);
     //清空输入框
     result.value='';

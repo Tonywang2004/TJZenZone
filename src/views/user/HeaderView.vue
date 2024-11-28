@@ -33,27 +33,29 @@ const menus = [
     { title: '首页', name: 'about' },
     { title: '实时AI对话', name: 'AIchat' },
     { title: '解压小游戏', name: 'game' },
-    { title: '心理小测试', name: 'personalitytest' },
+    { title: '心理小测试', name: 'quiz' },
     { title: '解压白噪声', name: 'whitenoise' },
 ]
 const handleAvatarClick = () => {
-    if (!user.loggedIn) {
-        router.push({ name: 'login' });
-        return;
-    }
+    // if (!user.loggedIn) {
+    //     router.push({ name: 'login' });
+    //     return;
+    // }
+    router.push({ name: 'profile' });
 }
 </script>
 <style scoped>
-.headimage{
-    width:183px;
+.headimage {
+    width: 183px;
     height: 70px;
     filter: invert(1);
 }
-.header{
+
+.header {
     width: 1200px;
     height: 80px;
-    margin:0 auto;
-    display:flex;
-    align-self:center;
+    margin: 0 auto;
+    display: flex;
+    align-self: center;
 }
 </style>

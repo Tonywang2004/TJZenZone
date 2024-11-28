@@ -1,15 +1,11 @@
 import AboutView from '@/views/about/AboutView.vue'
 import ApplyView from '@/views/AIchat/ApplyView.vue'
-<<<<<<< HEAD
-import ContactView from '@/views/personalitytest/ContactView.vue'
 import Whitenoise from '@/views/whitenoise/Whitenoise.vue'
-=======
-import ContactView from '@/views/personalitytest/TestView.vue'
-import DonationView from '@/views/whitenoise/DonationView.vue'
->>>>>>> d7cb35f22983c5472aca1737774f35e68314f038
 import LoginView from '@/views/login/LoginView.vue'
 import NewsDetailView from '@/views/game/NewsDetailView.vue'
 import NewsView from '@/views/game/NewsView.vue'
+import ProfileView from '@/views/profile/ProfileView.vue'
+import QuizView from '@/views/quiz/QuizView.vue'
 import UserView from '@/views/user/UserView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -55,12 +51,12 @@ const router = createRouter({
                     component: NewsDetailView,
                 },
                 {
-                    name: 'personalitytest',
+                    name: 'quiz',
                     meta: {
                         title: '心理小测试',
                     },
-                    path: 'personalitytest',
-                    component: ContactView,
+                    path: 'quiz',
+                    component: QuizView,
                 },
                 {
                     name: 'whitenoise',
@@ -69,6 +65,11 @@ const router = createRouter({
                     },
                     path: 'whitenoise',
                     component: Whitenoise,
+                },
+                {
+                    name: 'profile',
+                    path: '/profile',
+                    component: ProfileView,
                 },
             ],
         },

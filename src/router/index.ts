@@ -6,6 +6,7 @@ import NewsDetailView from '@/views/game/NewsDetailView.vue'
 import NewsView from '@/views/game/NewsView.vue'
 import ProfileView from '@/views/profile/ProfileView.vue'
 import QuizView from '@/views/quiz/QuizView.vue'
+import QuizsView from '@/views/quiz/QuizsView.vue'
 import UserView from '@/views/user/UserView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -49,6 +50,14 @@ const router = createRouter({
                     },
                     path: 'news/:id',
                     component: NewsDetailView,
+                },
+                {
+                    name: 'quizs',
+                    meta: {
+                        title: '心理小测试',
+                    },
+                    path: 'quizs',
+                    component: QuizsView,
                 },
                 {
                     name: 'quiz',

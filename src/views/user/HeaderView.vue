@@ -33,14 +33,14 @@ const menus = [
     { title: '首页', name: 'about' },
     { title: '实时AI对话', name: 'AIchat' },
     { title: '解压小游戏', name: 'game' },
-    { title: '心理小测试', name: 'quiz' },
+    { title: '心理小测试', name: 'quizs' },
     { title: '解压白噪声', name: 'whitenoise' },
 ]
 const handleAvatarClick = () => {
-    // if (!user.loggedIn) {
-    //     router.push({ name: 'login' });
-    //     return;
-    // }
+    if (!user.loggedIn) {
+        router.push({ name: 'login' });
+        return;
+    }
     router.push({ name: 'profile' });
 }
 </script>

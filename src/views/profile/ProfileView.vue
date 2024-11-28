@@ -4,11 +4,11 @@
         <ol class="profile-list">
             <li>
                 <h3>用户名</h3>
-                <p>{{ username }}</p>
+                <p>{{ userStore.username }}</p>
             </li>
             <li>
                 <h3>邮箱</h3>
-                <p>{{ email }}</p>
+                <p>{{ getEmail() }}</p>
             </li>
             <li>
                 <h3>白噪音偏好</h3>
@@ -23,10 +23,18 @@
 </template>
 <script setup lang="ts">
 
-let username = '1';
-let email = '1';
+import { useUserStore } from '@/store/userStore';
+import axios from 'axios';
+
+const userStore = useUserStore();
+
 let whitenoisePreference = '1';
 let gameTime = '1';
+
+const getEmail = async () => {
+    const response = await axios.post('http://localhost:9000/api/profile/email');
+    return response.data;
+};
 
 </script>
 

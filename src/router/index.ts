@@ -56,15 +56,16 @@ const router = createRouter({
                     meta: {
                         title: '心理小测试',
                     },
-                    path: 'quizs',
+                    path: '/quizs',
                     component: QuizsView,
+                    props: true  // 允许通过 props 传递路由参数
                 },
                 {
                     name: 'quiz',
                     meta: {
                         title: '心理小测试',
                     },
-                    path: 'quiz',
+                    path: '/quiz/:id',
                     component: QuizView,
                 },
                 {

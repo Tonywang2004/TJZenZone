@@ -25,6 +25,7 @@
         </ol>
     </div>
 </template>
+
 <script setup lang="ts">
 
 import { useUserStore } from '@/store/userStore';
@@ -50,12 +51,48 @@ const getMbti = async () => {
 <style scoped>
 .profile-view {
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
 }
 
 .profile-list {
     text-align: center;
     list-style: none;
     justify-content: center;
+    padding: 0;
+    /* 清除默认内边距 */
+}
+
+.profile-list li {
+    margin: 15px 0;
+    /* 增加列表项之间的间距 */
+    padding: 10px;
+    /* 添加内边距 */
+    transition: background-color 0.3s;
+    /* 增加过渡效果 */
+}
+
+.profile-list li:hover {
+    background-color: #e0f7fa;
+    /* 鼠标悬停时的背景颜色 */
+}
+
+h1 {
+    font-size: 2em;
+    /* 增大标题字体 */
+    color: #333;
+    /* 修改标题颜色 */
+}
+
+h3 {
+    color: #007BFF;
+    /* 修改子标题颜色 */
+}
+
+p {
+    font-size: 1.2em;
+    /* 增大段落字体 */
+    color: #555;
+    /* 修改文本颜色 */
 }
 </style>

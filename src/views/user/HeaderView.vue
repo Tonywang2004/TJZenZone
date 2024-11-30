@@ -37,10 +37,10 @@ const menus = [
     { title: '解压白噪声', name: 'whitenoise' },
 ]
 const handleAvatarClick = () => {
-    // if (!user.loggedIn) {
-    //     router.push({ name: 'login' });
-    //     return;
-    // }
+    if (!user.loggedIn) {
+        router.push({ name: 'login' });
+        return;
+    }
     router.push({ name: 'profile' });
 }
 </script>

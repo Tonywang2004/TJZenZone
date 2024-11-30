@@ -7,13 +7,15 @@
       <button @click="restartTest">重新测试</button>
     </div>
     <div v-else>
-      <div v-for="(question, index) in questions">
+      <div v-for="(question, index) in questions" :key="index">
         <h2>{{ index + 1 }}. {{ question.discription }}</h2>
         <div class="options">
-          <label v-for="level in levels" :key="level" class="option">
-            <input type="radio" :value="level" v-model="userAnswers[index]" />
-            {{ level }}
-          </label>
+          不认同--
+          <span v-for="level in levels" :key="level" class="option"
+                @click="selectAnswer(index, level)"
+                :style="{ backgroundColor: getColor(index, level) }"
+          />
+          --认同
         </div>
       </div>
       <button @click="submitTest">提交测试</button>
@@ -22,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import router from '@/router';
-import { useUserStore } from '@/store/userStore';
+import {useUserStore} from '@/store/userStore';
 
 interface answer {
   E: number; // 外向
@@ -40,12 +42,15 @@ interface answer {
 
 const username = useUserStore().username;
 const levels = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]; // 认同程度
-let questions = ref<{ quesionId: number, quizId: number, discription: string, dimension: string }[]>([]);
-console.log("questions: ", questions.value);
+let questions = ref<{ questionId: number, quizId: number, discription: string, dimension: string }[]>([]);
 
 let testStatus = ref(false);
 let userAnswers = ref<number[]>(new Array(questions.value.length).fill(0)); // 存储用户的答案
-let answers = ref<answer>({ "E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0 }); // 存储答案
+let answers = ref<answer>({"E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0}); // 存储答案
+
+const selectAnswer = (index: number, level: number) => {
+  userAnswers.value[index] = level; // 更新用户选择的答案
+};
 
 const submitTest = async () => {
   for (let i = 0; i < questions.value.length; i++) {
@@ -79,8 +84,7 @@ const submitTest = async () => {
         answers.value.P += selection; // 认同程度累加到P
         answers.value.J -= selection; // 认同程度减少到J
       }
-    }
-    else {
+    } else {
       alert("请选择答案");
       return;
     }
@@ -99,17 +103,14 @@ const submitTest = async () => {
       P: answers.value.P
     });
   testStatus.value = true;
-  console.log("testStatus 更新为：", testStatus);
 }
 
 const getResult = () => {
-  const { E, I, S, N, T, F, J, P } = answers.value;
-  const personalityType =
-    (E > I ? 'E' : 'I') +
-    (S > N ? 'S' : 'N') +
-    (T > F ? 'T' : 'F') +
-    (J > P ? 'J' : 'P');
-  return personalityType;
+  const {E, I, S, N, T, F, J, P} = answers.value;
+  return (E > I ? 'E' : 'I') +
+      (S > N ? 'S' : 'N') +
+      (T > F ? 'T' : 'F') +
+      (J > P ? 'J' : 'P');
 };
 
 const restartTest = () => {
@@ -125,14 +126,33 @@ const restartTest = () => {
     P: 0,
   };
   testStatus.value = false;
-  console.log("testStatus 更新为：", testStatus);
+};
+
+const getColor = (index: number, level: number) => {
+  // 根据级别返回对应的颜色
+  if (userAnswers.value[index] === level)
+    return '#df00ff';
+  const colorMap: Record<number, string> = {
+    '-5': '#003cff',
+    '-4': '#0059ff',
+    '-3': '#009dff',
+    '-2': '#00d0ff',
+    '-1': '#00ffb2',
+    0: '#00e67f',
+    1: '#00ff2a',
+    2: '#37ff00',
+    3: '#00ff15',
+    4: '#bfff00',
+    5: '#ffcc00'
+  };
+
+  return colorMap[level] || '#ffffff'; // 默认颜色为白色
 };
 
 onMounted(async () => {
   const response = await axios.post("http://localhost:9000/quiz/getQuestions",
-    { id: router.currentRoute.value.params.id });
+      {id: router.currentRoute.value.params.id});
   questions.value = response.data;
-  console.log(questions.value);
 });
 </script>
 
@@ -144,49 +164,30 @@ onMounted(async () => {
 
 .options {
   display: flex;
-  /* 使用flex布局 */
-  justify-content: space-between;
-  /* 均匀分布 */
-  margin: 20px 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .option {
-  display: flex;
-  align-items: center;
-  /* 调整横向间距 */
+  padding: 8px;
+  border-color: white;
+  width: 50px;
   cursor: pointer;
-  padding: 10px;
-  border: 2px solid #007BFF;
-  border-radius: 5px;
   transition: background-color 0.3s, transform 0.2s;
-  flex: 1;
-  /* 让选项均匀分布 */
+  background-color: #5d8bbd;
 }
 
 .option:hover {
-  background-color: #e7f3ff;
-  transform: scale(1.02);
-}
-
-.option::selection {
-  background-color: #007BFF;
-}
-
-input[type="radio"] {
-  display: none;
-}
-
-.level-text {
-  margin-left: 10px;
-  color: #007BFF;
+  transform: scale(1.05);
 }
 
 button {
-  margin: 5px;
-  padding: 10px 15px;
+  margin: 20px;
+  padding: 10px 20px;
   background-color: #4caf50;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 

@@ -4,7 +4,7 @@ import Whitenoise from '@/views/whitenoise/Whitenoise.vue'
 import LoginView from '@/views/login/LoginView.vue'
 import ProfileView from '@/views/profile/ProfileView.vue'
 import QuizView from '@/views/quiz/QuizView.vue'
-import QuizsView from '@/views/quiz/QuizsView.vue'
+import QuizSelectionView from '@/views/quiz/QuizSelectionView.vue'
 import UserView from '@/views/user/UserView.vue'
 import GameView from '@/views/game/GameView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -43,12 +43,12 @@ const router = createRouter({
                     component: GameView,
                 },
                 {
-                    name: 'quizs',
+                    name: 'quizselection',
                     meta: {
                         title: '心理小测试',
                     },
-                    path: '/quizs',
-                    component: QuizsView,
+                    path: '/quizselection',
+                    component: QuizSelectionView,
                     props: true  // 允许通过 props 传递路由参数
                 },
                 {

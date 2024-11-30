@@ -11,6 +11,10 @@
                 <p>{{ getEmail() }}</p>
             </li>
             <li>
+                <h3>人格类型</h3>
+                <p>{{ getMbti() }}</p>
+            </li>
+            <li>
                 <h3>白噪音偏好</h3>
                 <p>{{ whitenoisePreference }}</p>
             </li>
@@ -32,7 +36,12 @@ let whitenoisePreference = '1';
 let gameTime = '1';
 
 const getEmail = async () => {
-    const response = await axios.post('http://localhost:9000/api/profile/email');
+    const response = await axios.post('http://localhost:9000/profile/email', { username: userStore.username });
+    return response.data;
+};
+
+const getMbti = async () => {
+    const response = await axios.post('http://localhost:9000/profile/mbti', { username: userStore.username });
     return response.data;
 };
 

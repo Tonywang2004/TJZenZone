@@ -146,7 +146,6 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { useUserStore } from '@/store/userStore';
-
 const router = useRouter();
 const type = ref<'login' | 'register' | 'reset-password'>('login')
 const waitVerify = ref(false)
@@ -174,6 +173,7 @@ const handleLogin = async () => {
     const response = await axios.post('http://localhost:9000/myHello/login', form);
     console.log(form.username);
     if (response.data.message === '登录成功') {
+      userStore.logIn();
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {
@@ -190,6 +190,7 @@ const handleSignup = async () => {
     const response = await axios.post('http://localhost:9000/myHello/register', form);
     console.log(response.data);
     if (response.data.message === '注册成功') {
+      userStore.logIn();
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {
@@ -206,6 +207,7 @@ const handleResetPasswordEmail = async () => {
     const response = await axios.post('http://localhost:9000/myHello/reset-password', form);
     console.log(response.data);
     if (response.data.message === '密码重置成功') {
+      userStore.logIn();
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {

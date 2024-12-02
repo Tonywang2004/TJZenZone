@@ -10,7 +10,7 @@ export function useUser() {
     if (!user) {
         throw new Error('User not provided')
     }
-    return user
+    return user;
 }
 
 export function provideUser(user: UserModel) {

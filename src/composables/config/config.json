@@ -64,32 +64,7 @@
         ]
     },
     "apply": {
-        "title": "SUBMISSION GUIDELINES 2024",
-        "guidelines": {
-            "content": "<div style=\"display: flex; flex-direction: column; gap: 32px\"><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">Eligibility Requirements</div><div style=\"font-size: 15px; color: rgb(86, 98, 115);\">1.Applications are 8-18 years old and have the permission of their legal parent or guardian to participate.<br><br>2.Attended a AI educational program at an accredited academic institution or homeschooling equivalent with full registration at an official institution.<br><br>3.Continuous AI projects can be enrolled if applications are completed in any academic year.<br><br>4.All submitted works or results must be original.Any applicant suspected of plagiarism or infringement will be disqualified from the competition,and the applicant will bear the legal responsibility.<br><br>5.The length of the project or paper is up to the discretion of the participant,but should convey the topic effectively.</div></div><div style=\"display: flex; flex-direction: column; gap: 24px;\"><div style=\"font-size: 17px; font-weight: 600;\">Application Process</div><div style=\"font-size: 15px; color: rgb(86, 98, 115);\">1.Fill in the application form(personal information,school information,category,reason)and submit the application fee.Check your spelling carefully including all login information,email addresses,etc.Incorrect email addresses may result in transmission of important information being delayed or unsuccessful.<br><br>2.Submit entries in the selected category.<br><br>3.Update or modify the submitted work,if necessary,within the specified time period.<br><br>4.Waiting for the results.<br><br></div></div></div>",
-            "timeline": [
-                {
-                    "field": "Frequency",
-                    "value": "Every year"
-                },
-                {
-                    "field": "Application Deadline",
-                    "value": "June 30, submissions accepted starting March 1. No further registrations will be accepted after the deadline."
-                },
-                {
-                    "field": "Results Announcement",
-                    "value": "Last week of August"
-                },
-                {
-                    "field": "Guest Judges",
-                    "value": "To be announced"
-                },
-                {
-                    "field": "Results",
-                    "value": "Winners will be posted in the winning entries section of the website."
-                }
-            ]
-        }
+        "title": "AI实时对话"
     },
     "contact": {
         "telephone": "+86 755 1234 5678",

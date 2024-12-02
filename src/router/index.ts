@@ -1,11 +1,12 @@
 import AboutView from '@/views/about/AboutView.vue'
 import ApplyView from '@/views/AIchat/ApplyView.vue'
-import ContactView from '@/views/personalitytest/TestView.vue'
 import Whitenoise from '@/views/whitenoise/Whitenoise.vue'
 import LoginView from '@/views/login/LoginView.vue'
-import NewsDetailView from '@/views/game/NewsDetailView.vue'
-import NewsView from '@/views/game/NewsView.vue'
+import ProfileView from '@/views/profile/ProfileView.vue'
+import QuizView from '@/views/quiz/QuizView.vue'
+import QuizSelectionView from '@/views/quiz/QuizSelectionView.vue'
 import UserView from '@/views/user/UserView.vue'
+import GameView from '@/views/game/GameView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
@@ -39,23 +40,24 @@ const router = createRouter({
                         title: '解压小游戏',
                     },
                     path: 'game',
-                    component: NewsView,
+                    component: GameView,
                 },
                 {
-                    name: 'newsDetail',
-                    meta: {
-                        title: '解压小游戏',
-                    },
-                    path: 'news/:id',
-                    component: NewsDetailView,
-                },
-                {
-                    name: 'personalitytest',
+                    name: 'quizselection',
                     meta: {
                         title: '心理小测试',
                     },
-                    path: 'personalitytest',
-                    component: ContactView,
+                    path: '/quizselection',
+                    component: QuizSelectionView,
+                    props: true  // 允许通过 props 传递路由参数
+                },
+                {
+                    name: 'quiz',
+                    meta: {
+                        title: '心理小测试',
+                    },
+                    path: '/quiz/:id',
+                    component: QuizView,
                 },
                 {
                     name: 'whitenoise',
@@ -64,6 +66,11 @@ const router = createRouter({
                     },
                     path: 'whitenoise',
                     component: Whitenoise,
+                },
+                {
+                    name: 'profile',
+                    path: '/profile',
+                    component: ProfileView,
                 },
             ],
         },

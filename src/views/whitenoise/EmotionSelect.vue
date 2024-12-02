@@ -56,7 +56,7 @@ const buttons = ref([
 
 // 用户选择情绪
 function selectEmotion(emotion) {
-  emit("emotionSelected", emotion); // 将选择的情绪传递给父组件
+  //emit("emotionSelected", emotion); // 将选择的情绪传递给父组件
 
   // 发送情绪数据到后端
   axios.post('http://localhost:9000/api/emotions/recommend', {
@@ -65,6 +65,11 @@ function selectEmotion(emotion) {
   })
       .then(response => {
         console.log('Emotion sent successfully:', response.data);
+        // 从后端返回的数据中提取推荐音频列表
+        const recommendedAudios = response.data;
+        console.log(recommendedAudios);
+        // 将推荐音频数据传递给父组件
+        emit("emotionSelected", { emotion, recommendedAudios });
       })
       .catch(error => {
         console.error('Error sending emotion:', error);

@@ -10,46 +10,40 @@
       <span>返回主页</span>
     </button>
 
-    <!-- 背景始终可见 -->
-    <div class="background">
-      <!-- 深色遮罩 -->
-      <div class="overlay" :class="{ 'dark-overlay': isDarkMode }"></div>
+    <!-- 深色遮罩 -->
+    <div class="overlay" :class="{ 'dark-overlay': isDarkMode }"></div>
 
-      <!-- 弹窗内容 -->
-      <div v-if="isUIVisible" class="popup-content">
-        <!-- 顶栏 -->
-        <div class="popup-header">
-          <div class="left">
-            <img src="@/assets/white-noise-icon.jpg" alt="White Noise" class="icon" />
-            <span>White Noise</span>
+    <!-- 弹窗内容 -->
+    <div v-if="isUIVisible" class="popup-content">
+      <!-- 顶栏 -->
+      <div class="popup-header">
+        <div class="left">
+          <img src="@/assets/white-noise-icon.jpg" alt="White Noise" class="icon" />
+          <span>White Noise</span>
+        </div>
+        <div class="right">
+          <div class="nav-item" @click="toggleFullscreen">
+            <a class="no-underline">{{ isFullscreen ? '取消全屏' : '全屏' }}</a>
           </div>
-          <div class="right">
-            <div class="nav-item" @click="toggleFullscreen">
-              <a class="no-underline">{{ isFullscreen ? '取消全屏' : '全屏' }}</a>
-            </div>
-            <div class="nav-item" @click="toggleUI">
-              <a class="no-underline">隐藏 UI</a>
-            </div>
-            <div class="nav-item" @click="toggleDarkMode">
-              <a class="no-underline">{{ isDarkMode ? '浅色模式' : '深色模式' }}</a>
-            </div>
+          <div class="nav-item" @click="toggleUI">
+            <a class="no-underline">隐藏 UI</a>
+          </div>
+          <div class="nav-item" @click="toggleDarkMode">
+            <a class="no-underline">{{ isDarkMode ? '浅色模式' : '深色模式' }}</a>
           </div>
         </div>
-        <!-- 显示选定情绪 -->
-        <h6 class="selected-emotion-title">
-          您选择的情绪是：<span class="emotion-highlight">{{ selectedEmotion }}</span>
-        </h6>
-        <!-- 按钮区 -->
-        <div class="button-grid">
-          <div
-              v-for="(button, index) in buttons"
-              :key="index"
-              class="square-button"
-              @click="playOrPause(button.audio, button.text)"
-          >
-            <img :src="button.icon" alt="Icon" />
-            <span>{{ button.text }}</span>
-          </div>
+      </div>
+
+      <!-- 按钮区 -->
+      <div class="button-grid">
+        <div
+            v-for="(button, index) in buttons"
+            :key="index"
+            class="square-button"
+            @click="playOrPause(button.audio, button.text)"
+        >
+          <img :src="button.icon" alt="Icon" />
+          <span>{{ button.text }}</span>
         </div>
       </div>
     </div>
@@ -113,10 +107,12 @@ function playAudio(audioUrl: string) {
           .then(() => startTimer())
           .catch((error) => console.error("播放音频失败:", error));
     } else {
+      backToController();
       audioPlayer.pause();
       stopTimer();
     }
   } else {
+    backToController();
     stopAudio();
     audioPlayer = new Audio(audioUrl);
     audioPlayer.loop = true;
@@ -166,7 +162,7 @@ function toggleUI() {
   isUIVisible.value = !isUIVisible.value;
 }
 
-function backToMain() {
+function backToController(){
   if(playDuration.value != 0){
     // 发送情绪数据到后端
     // 从 userStore 获取用户名
@@ -187,6 +183,14 @@ function backToMain() {
           console.error('发送数据到后端失败:', error);
         });
   }
+}
+
+function backToMain() {
+  if(audioPlayer){
+    backToController();
+    stopAudio();
+    stopTimer();
+  }
   //返回主页
   router.push({ name: 'home' })
 }
@@ -202,8 +206,8 @@ function toggleDarkMode() {
 /* 背景 */
 /* 背景始终可见 */
 .background {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 80px;
   left: 0;
   width: 100vw;
   height: 100vh;

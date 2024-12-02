@@ -52,10 +52,13 @@ import { useConfig } from '@/composables/config';
 import {ref} from 'vue'
 import axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useUserStore } from '@/store/userStore';
 
 const start="你好！有什么我能帮助你的吗？\n"
 const auto=ref("自动发送")
-const username=ref("123")
+//暂时是这样的，可能还要修改
+const user=useUserStore()
+const username=ref(user.username)
 //添加信息使用.push
 const messages=ref([
         {"role": "system", "content": "请告诉我你遇到的问题，我会尽力为你提供帮助。"},

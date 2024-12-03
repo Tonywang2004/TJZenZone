@@ -11,10 +11,8 @@
         <h2>{{ index + 1 }}. {{ question.description }}</h2>
         <div class="options">
           不认同--
-          <span v-for="level in levels" :key="level" class="option"
-                @click="selectAnswer(index, level)"
-                :style="{ backgroundColor: getColor(index, level) }"
-          />
+          <span v-for="level in levels" :key="level" class="option" @click="selectAnswer(index, level)"
+            :style="{ backgroundColor: getColor(level), borderColor: getBorderColor(index, level) }" />
           --认同
         </div>
       </div>
@@ -24,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
 import router from '@/router';
-import {useUserStore} from '@/store/userStore';
+import { useUserStore } from '@/store/userStore';
 
 interface answer {
   E: number; // 外向
@@ -46,7 +44,7 @@ let questions = ref<{ questionId: number, quizId: number, description: string, d
 
 let testStatus = ref(false);
 let userAnswers = ref<number[]>(new Array(questions.value.length).fill(0)); // 存储用户的答案
-let answers = ref<answer>({"E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0}); // 存储答案
+let answers = ref<answer>({ "E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0 }); // 存储答案
 
 const selectAnswer = (index: number, level: number) => {
   userAnswers.value[index] = level; // 更新用户选择的答案
@@ -106,11 +104,11 @@ const submitTest = async () => {
 }
 
 const getResult = () => {
-  const {E, I, S, N, T, F, J, P} = answers.value;
+  const { E, I, S, N, T, F, J, P } = answers.value;
   return (E > I ? 'E' : 'I') +
-      (S > N ? 'S' : 'N') +
-      (T > F ? 'T' : 'F') +
-      (J > P ? 'J' : 'P');
+    (S > N ? 'S' : 'N') +
+    (T > F ? 'T' : 'F') +
+    (J > P ? 'J' : 'P');
 };
 
 const restartTest = () => {
@@ -128,30 +126,33 @@ const restartTest = () => {
   testStatus.value = false;
 };
 
-const getColor = (index: number, level: number) => {
+const getColor = (level: number) => {
   // 根据级别返回对应的颜色
-  if (userAnswers.value[index] === level)
-    return '#df00ff';
   const colorMap: Record<number, string> = {
-    '-5': '#003cff',
-    '-4': '#0059ff',
-    '-3': '#009dff',
-    '-2': '#00d0ff',
-    '-1': '#00ffb2',
-    0: '#00e67f',
-    1: '#00ff2a',
-    2: '#37ff00',
-    3: '#00ff15',
-    4: '#bfff00',
-    5: '#ffcc00'
+    '-5': 'rgba(5,170,245,0.8)',
+    '-4': 'rgba(20,190,200,0.8)',
+    '-3': 'rgba(50,200,150,0.8)',
+    '-2': 'rgba(95,200,115,0.8)',
+    '-1': 'rgba(145,200,80,0.8)',
+    0: 'rgba(195,200,80,0.8)',
+    1: 'rgba(200,180,80,0.8)',
+    2: 'rgba(200,160,80,0.8)',
+    3: 'rgba(200,145,80,0.8)',
+    4: 'rgba(200,115,80,0.8)',
+    5: 'rgba(200,80,80,0.8)'
   };
-
   return colorMap[level] || '#ffffff'; // 默认颜色为白色
 };
 
+const getBorderColor = (index: number, level: number) => {
+  if (userAnswers.value[index] === level)
+    return '#8e8e8e';
+  return 'rgba(255,255,255,0)';
+}
+
 onMounted(async () => {
   const response = await axios.post("http://localhost:9000/quiz/getQuestions",
-      {id: router.currentRoute.value.params.id});
+    { id: router.currentRoute.value.params.id });
   questions.value = response.data;
 });
 </script>
@@ -166,15 +167,17 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 60px;
 }
 
 .option {
   padding: 8px;
-  border-color: white;
   width: 50px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
   background-color: #5d8bbd;
+  border-style: solid;
+  border-width: 3px;
 }
 
 .option:hover {

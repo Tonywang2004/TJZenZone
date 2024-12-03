@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <div v-for="(question, index) in questions" :key="index">
-        <h2>{{ index + 1 }}. {{ question.discription }}</h2>
+        <h2>{{ index + 1 }}. {{ question.description }}</h2>
         <div class="options">
           不认同--
           <span v-for="level in levels" :key="level" class="option"
@@ -42,7 +42,7 @@ interface answer {
 
 const username = useUserStore().username;
 const levels = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]; // 认同程度
-let questions = ref<{ questionId: number, quizId: number, discription: string, dimension: string }[]>([]);
+let questions = ref<{ questionId: number, quizId: number, description: string, dimension: string }[]>([]);
 
 let testStatus = ref(false);
 let userAnswers = ref<number[]>(new Array(questions.value.length).fill(0)); // 存储用户的答案

@@ -8,17 +8,13 @@
         <div class="flex gap-[48px] h-full items-center">
           <RouterLink v-for="menu in menus" :to="{ name: menu.name }" custom v-slot="{ isActive, navigate, href }">
             <div
-                class="h-full flex items-center justify-center whitespace-nowrap relative after:bottom-0 after:absolute after:h-[4px] after:block after:content-[''] after:w-full"
-                :class="{ 'after:bg-primary font-semibold': isActive }"
-            >
+              class="h-full flex items-center justify-center whitespace-nowrap relative after:bottom-0 after:absolute after:h-[4px] after:block after:content-[''] after:w-full"
+              :class="{ 'after:bg-primary font-semibold': isActive }">
               <a class="no-underline text-black" :href="href" @click="navigate">{{ menu.title }}</a>
             </div>
           </RouterLink>
-          <img
-              class="shrink-0 w-[32px] h-[32px] rounded-full cursor-pointer"
-              :src="userStore.loggedIn == 1 ? avatar : anonymous"
-              @click="handleAvatarClick"
-          />
+          <img class="shrink-0 w-[32px] h-[32px] rounded-full cursor-pointer"
+            :src="userStore.loggedIn == 1 ? avatar : anonymous" @click="handleAvatarClick" />
         </div>
       </div>
     </div>
@@ -33,7 +29,7 @@
             <!-- <RouterLink :to="{ name: 'profile' }">
               <button class="btn-primary">进入个人主页</button>
             </RouterLink> -->
-            <button class="btn-primary">进入个人主页</button>
+            <button class="btn-primary" @click="enterProfile">进入个人主页</button>
             <br><br>
             <button class="btn-changeLogin" @click="changeLogIn">切换登录</button>
           </div>
@@ -55,11 +51,11 @@ import { useRouter } from 'vue-router';
 const userStore = useUserStore();
 const router = useRouter();
 const menus = [
-    { title: '首页', name: 'about' },
-    { title: '实时AI对话', name: 'AIchat' },
-    { title: '解压小游戏', name: 'game' },
-    { title: '心理小测试', name: 'quizselection' },
-    { title: '解压白噪声', name: 'whitenoise' },
+  { title: '首页', name: 'about' },
+  { title: '实时AI对话', name: 'AIchat' },
+  { title: '解压小游戏', name: 'game' },
+  { title: '心理小测试', name: 'quizselection' },
+  { title: '解压白噪声', name: 'whitenoise' },
 ]
 const showUserInfoModal = ref(false); // 控制弹窗的显示与隐藏
 
@@ -70,6 +66,11 @@ const handleAvatarClick = () => {
   } else {
     showUserInfoModal.value = true; // 显示弹窗
   }
+};
+
+const enterProfile = () => {
+  router.push({ name: 'profile' });
+  showUserInfoModal.value = false; // 关闭弹窗
 };
 
 const closeModal = () => {
@@ -89,6 +90,7 @@ const changeLogIn = () => {
   height: 70px;
   filter: invert(1);
 }
+
 .header {
   width: 1200px;
   height: 80px;
@@ -96,6 +98,7 @@ const changeLogIn = () => {
   display: flex;
   align-self: center;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -108,6 +111,7 @@ const changeLogIn = () => {
   align-items: center;
   z-index: 1000;
 }
+
 .modal-content {
   background: white;
   padding: 20px;
@@ -117,6 +121,7 @@ const changeLogIn = () => {
   gap: 10px;
   align-items: center;
 }
+
 .btn-primary {
   background-color: #4CAF50;
   color: white;
@@ -125,9 +130,11 @@ const changeLogIn = () => {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .btn-primary:hover {
   background-color: #45a049;
 }
+
 .btn-changeLogin {
   background-color: red;
   color: white;
@@ -136,9 +143,11 @@ const changeLogIn = () => {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .btn-changeLogin:hover {
   background-color: darkred;
 }
+
 .close-btn {
   background: none;
   border: none;

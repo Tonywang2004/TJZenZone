@@ -159,8 +159,11 @@ onMounted(async () => {
 
 <style scoped>
 .container {
+  justify-self: center;
+  justify-content: center;
   text-align: center;
   font-family: Arial, sans-serif;
+  margin-top: 66px;
 }
 
 .options {

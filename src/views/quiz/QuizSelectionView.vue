@@ -1,7 +1,7 @@
 <template>
     <div class="test-list">
         <div class="test-item" v-for="(item, index) in quizNames">
-            <h2>{{ item.name }}</h2>
+            <h1>{{ item.name }}</h1>
             <button @click="enterTest(quizNames[index].id)">{{ buttonText[index] }}</button>
         </div>
     </div>
@@ -13,56 +13,53 @@ import axios from 'axios';
 import router from '@/router';
 import { useUserStore } from '@/store/userStore';
 
-const username = useUserStore().username;
 const quizNames = ref<{ name: string; id: number }[]>([]);
-const buttonText = ref<string[]>(new Array(quizNames.value.length));
-
-const getQuizs = async () => {
-    const res = await axios.post('http://localhost:9000/quiz/getQuizNames');
-    quizNames.value = res.data;
-    if (username !== "" && username !== undefined) {
-        for (let i = 0; i < quizNames.value.length; i++) {
-            const res = await axios.post('http://localhost:9000/quiz/getQuizResult', {
-                username: username,
-                quizId: quizNames.value[i].id
-            });
-            buttonText.value[i] = res.data ? '重新测试' : '开始测验';
-        }
-    }
-    else
-        buttonText.value = buttonText.value.fill("开始测验(游客)");
-}
+const buttonText = ref<string[]>();
 
 const enterTest = (id: number) => {
     router.push({ name: 'quiz', params: { id: id } });
 }
 
 // 在组件挂载时获取测验名称和按钮文字
-onMounted(() => {
-    getQuizs();
+onMounted(async () => {
+    const res = await axios.post('http://localhost:9000/quiz/getQuizNames');
+    quizNames.value = res.data;
+    buttonText.value = new Array(quizNames.value.length).fill('开始测试(游客)');
+    if (useUserStore().loggedIn === 1) {
+        for (let i = 0; i < quizNames.value.length; i++) {
+            const res = await axios.post('http://localhost:9000/quiz/getQuizResult', {
+                username: useUserStore().username,
+                quizId: quizNames.value[i].id
+            });
+            buttonText.value[i] = res.data ? '重新测试' : '开始测试';
+        }
+    }
+    console.log("quizNames: ", quizNames.value);
+    console.log("loggedIn: ", useUserStore().loggedIn);
+    console.log("buttonText: ", buttonText.value);
 });
 </script>
 
 <style scoped>
-.test-list {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    margin: auto;
-    text-align: center;
-}
-
 .test-item {
+    justify-self: center;
+    width: 900px;
     margin: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 100px;
-    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    background-color: #b7ebfb18;
 }
 
 button {
-    padding: 10px;
-    background-color: #007bff;
+    margin-top: 20px;
+    height: 66px;
+    width: 200px;
+    font-size: 24px;
+    background-color: #90d6d1b8;
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,6 +68,6 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #5bdad2b8;
 }
 </style>

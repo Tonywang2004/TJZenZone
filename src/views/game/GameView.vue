@@ -39,29 +39,28 @@ const games = ref([
   }
 ]);
 
-const userName = "111111"; // 测试用，假设这里用户的用户名为 "111111"，数据库中用户名
-// const userName = useUserStore().username;//
 
-
+const userName = useUserStore().username;//
+console.log("当前用户名：", userName);
 // 获取用户游戏状态（从后端获取最高分）
 const getUserGameState = async (gameName) => {
   try {
-    // console.log(`正在从后端获取用户【${userName}】在【${gameName}】游戏中的状态...`);
-    const response = await axios.get(`http://localhost:8080/api/gamestate/${userName}/${gameName}`);
+    console.log(`正在从后端获取用户【${userName}】在【${gameName}】游戏中的状态...`);
+    const response = await axios.get(`http://localhost:9000/api/gamestate/${userName}/${gameName}`);
 
     if (response.data) {
-      // console.log('成功获取游戏状态:', response.data);
+      console.log('成功获取游戏状态:', response.data);
       // 返回最高分和游戏时长
       return {
         highestScore: response.data.highestScore || 0,  // 如果没有最高分，默认为0
         gameDuration: response.data.gameDuration || 0   // 默认游戏时长为0
       };
     } else {
-      // console.log('没有找到用户的游戏状态，使用默认值');
+      console.log('没有找到用户的游戏状态，使用默认值');
       return { highestScore: 0, gameDuration: 0 };
     }
   } catch (error) {
-    // console.error('获取游戏状态失败:', error);
+    console.error('获取游戏状态失败:', error);
     return { highestScore: 0, gameDuration: 0 }; // 如果出错，返回默认值
   }
 };
@@ -94,7 +93,7 @@ class LocalStorageManager {
 const updateLocalHighestScore = (newScore) => {
   const localStorageManager = new LocalStorageManager();
   localStorageManager.setBestScore(newScore);
-  // console.log(`本地最高分已更新为: ${newScore}`);
+  console.log(`本地最高分已更新为: ${newScore}`);
 };
 
 // 打开游戏并记录开始时间
@@ -135,11 +134,11 @@ const openGame = async (gameName) => {
 
       if (gameName === '2048') {
         const currentScore = getGameCurrentScore(gameWindow); // 获取当前分数
-        // console.log(`当前分数：${currentScore}`);
+        console.log(`当前分数：${currentScore}`);
         if (currentScore > finalScore) {
           localStorageManager.setBestScore(currentScore);
           finalScore = currentScore;
-          // console.log('数据库存储的最高分已更新为:', currentScore);
+          console.log('数据库存储的最高分已更新为:', currentScore);
         }
       }
       //存储数据
@@ -150,12 +149,12 @@ const openGame = async (gameName) => {
         gameDuration: totalGameDuration,
       };
       // 将游戏数据发送到后端
-      axios.post('http://localhost:8080/api/gamestate/add', gameStateData)
+      axios.post('http://localhost:9000/api/gamestate/add', gameStateData)
         .then(response => {
-          // console.log('游戏数据已成功保存:', response.data);
+          console.log('游戏数据已成功保存:', response.data);
         })
         .catch(error => {
-          // console.error('游戏数据保存失败:', error);
+          console.error('游戏数据保存失败:', error);
         });
 
       sessionStorage.removeItem(`${gameName}_startTime`);

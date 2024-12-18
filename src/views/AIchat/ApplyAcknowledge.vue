@@ -30,7 +30,8 @@
               </audio>
               <audio v-if="message.role==='system'&& index!=0 && index1*2===index" :src="src.src" 
               controls
-              autoplay
+              :autoplay="index1 === audiourllist.length - 1" 
+              @canplay="index1 === audiourllist.length - 1 && $event.target.play()"
               >
               </audio>
             </div>
@@ -60,12 +61,8 @@ const auto=ref("自动发送")
 const user=useUserStore()
 const username=ref(user.username)
 //添加信息使用.push
-const messages=ref([
-        {"role": "system", "content": "请告诉我你遇到的问题，我会尽力为你提供帮助。"},
-      ])
-const audiourllist=ref([
-  {"src":"null"},
-])
+const messages=ref(user.messages)
+const audiourllist=ref(user.audiourllist)
 const audioBlob = ref<Blob | null>(null);
 const audioUrl = ref<string | null>(null);
 

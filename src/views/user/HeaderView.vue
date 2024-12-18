@@ -10,7 +10,12 @@
             <div
               class="h-full flex items-center justify-center whitespace-nowrap relative after:bottom-0 after:absolute after:h-[4px] after:block after:content-[''] after:w-full"
               :class="{ 'after:bg-primary font-semibold': isActive }">
-              <a class="no-underline text-black" :href="href" @click="navigate">{{ menu.title }}</a>
+              <div v-if="menu.name==='AIchat'||menu.name==='whitenoise'">
+              <a class="no-underline text-black" :href="userStore.loggedIn?href:'#/login'">{{ menu.title }}</a>
+              </div>
+              <div v-else>
+              <a class="no-underline text-black" :href="href">{{ menu.title }}</a>
+              </div>
             </div>
           </RouterLink>
           <img class="shrink-0 w-[32px] h-[32px] rounded-full cursor-pointer"

@@ -1,21 +1,21 @@
 <template>
   <div class="game-container">
     <h1 class="title">解压小游戏</h1>
-    <p class="description">请选择一款休闲小游戏</p>
-
-    <!-- 将 games 传递给 GameSelection 组件 -->
+    <p class="description">
+      欢迎！亲爱的玩家： {{ userName || '游客' }} ，猜你想玩：{{ recommendedGame }}
+    </p>
+    <!-- 游戏选择 -->
     <GameSelection :games="games" @openGame="openGame" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import GameSelection from './GameSelection.vue';
 import { useUserStore } from '@/store/userStore';
 
-// 游戏列表数据，由父组件管理
-const games = ref([
+const games = ref([ // 游戏列表
   {
     name: '2048',
     displayName: '2048',
@@ -25,24 +25,25 @@ const games = ref([
   },
   {
     name: 'memory-match',
-    displayName: '记忆配对',
+    displayName: '记忆配对\nmemory-match',
     intro: '锻炼你的记忆力和反应力，放松自己！',
     detail: '《记忆配对》是一款经典的记忆力训练游戏。你需要翻开卡片，找到匹配的对，挑战你的记忆和反应速度。这个游戏源自18世纪法国宫廷贵族，是一种古老而富有挑战性的益智游戏，适合任何想要挑战自己记忆力的玩家！',
     image: 'faa/public/memory-match/images/fevicon.png',
   },
   {
     name: 'ctr',
-    displayName: '割绳子',
+    displayName: '割绳子\nctr',
     intro: '动脑筋，割绳子，喂糖果给Om Nom！',
     detail: '《割绳子》是一款富有创意的物理益智游戏，玩家的目标是让糖果掉到可爱的角色Om Nom的嘴里。在愉快的音乐和独特的关卡设计中，你需要运用逻辑思维来解决各种各样的物理难题，游戏玩法简单但富有深度，带给你无尽的乐趣！',
     image: 'faa/public/ctr/images/ctr.jpg',
   }
 ]);
 
+const userName = useUserStore().username; // 获取当前用户名
 
-const userName = useUserStore().username;//
-console.log("当前用户名：", userName);
-// 获取用户游戏状态（从后端获取最高分）
+const recommendedGame = ref(''); // 默认推荐2048
+
+// 获取用户游戏状态（从后端获取游戏时长和最高分）
 const getUserGameState = async (gameName) => {
   try {
     console.log(`正在从后端获取用户【${userName}】在【${gameName}】游戏中的状态...`);
@@ -52,7 +53,7 @@ const getUserGameState = async (gameName) => {
       console.log('成功获取游戏状态:', response.data);
       // 返回最高分和游戏时长
       return {
-        highestScore: response.data.highestScore || 0,  // 如果没有最高分，默认为0
+        highestScore: response.data.highestScore || 0, // 如果没有最高分，默认为0
         gameDuration: response.data.gameDuration || 0   // 默认游戏时长为0
       };
     } else {
@@ -65,9 +66,9 @@ const getUserGameState = async (gameName) => {
   }
 };
 
+// 获取当前游戏分数
 const getGameCurrentScore = (gameWindow) => {
   if (gameWindow) {
-    // 假设分数显示在具有 "score-container" 类的元素中
     const scoreContainer = gameWindow.document.querySelector('.score-container');
     return scoreContainer ? parseInt(scoreContainer.innerText, 10) : 0;
   }
@@ -89,6 +90,7 @@ class LocalStorageManager {
     return parseInt(this.storage.getItem(this.bestScoreKey) || 0, 10);
   }
 }
+
 // 更新本地存储中的最高分
 const updateLocalHighestScore = (newScore) => {
   const localStorageManager = new LocalStorageManager();
@@ -98,7 +100,8 @@ const updateLocalHighestScore = (newScore) => {
 
 // 打开游戏并记录开始时间
 const openGame = async (gameName) => {
-  const gameState = await getUserGameState(gameName); // 获取后端游戏状态
+  // 获取后端游戏状态
+  const gameState = await getUserGameState(gameName);
 
   let gameStartTime = sessionStorage.getItem(`${gameName}_startTime`);
   if (!gameStartTime) {
@@ -119,7 +122,7 @@ const openGame = async (gameName) => {
   const userHighestScore = gameState.highestScore;  // 从返回的数据中提取最高分
   updateLocalHighestScore(userHighestScore);
 
-  //检测窗口状态
+  // 检测窗口状态
   const checkWindowClosed = setInterval(() => {
     if (gameWindow && gameWindow.closed) {
 
@@ -141,13 +144,15 @@ const openGame = async (gameName) => {
           console.log('数据库存储的最高分已更新为:', currentScore);
         }
       }
-      //存储数据
+
+      // 存储数据
       const gameStateData = {
         userName,
         gameType: gameName,
         highestScore: finalScore,
         gameDuration: totalGameDuration,
       };
+
       // 将游戏数据发送到后端
       axios.post('http://localhost:9000/api/gamestate/add', gameStateData)
         .then(response => {
@@ -163,13 +168,95 @@ const openGame = async (gameName) => {
   }, 1000); // 每秒检查窗口是否关闭
 };
 
+// 动态推荐时长最长的游戏
+const getRecommendedGame = async () => {
+  if (userName) {
+    try {
+      const gameStates = await Promise.all(
+        games.value.map(game => getUserGameState(game.name))
+      );
+
+      const gameDurations = gameStates.map((state, index) => ({
+        gameName: games.value[index].name,
+        gameDuration: state.gameDuration,
+      }));
+
+      const longestGame = gameDurations.reduce((max, current) =>
+        current.gameDuration > max.gameDuration ? current : max
+      );
+
+      recommendedGame.value = longestGame.gameDuration > 0 ? longestGame.gameName : '2048';
+    } catch (error) {
+      console.error('获取推荐游戏失败:', error);
+      recommendedGame.value = '2048'; // 默认推荐2048
+    }
+  }
+  else {
+    recommendedGame.value = '2048';
+  }
+
+};
+
+// 获取推荐游戏
+onMounted(() => {
+  getRecommendedGame();
+
+});
+
 </script>
-
-
 
 <style scoped>
 .game-container {
   text-align: center;
   margin-top: 30px;
+  font-family: 'Arial', sans-serif;
+  /* 设置字体 */
+}
+
+.title {
+  font-size: 36px;
+  /* 设置标题字体大小 */
+  font-weight: bold;
+  color: #2c3e50;
+  /* 设置字体颜色 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  /* 字体阴影效果 */
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 18px;
+  /* 设置描述文字大小 */
+  color: #7f8c8d;
+  /* 设置字体颜色 */
+  margin-bottom: 30px;
+  font-style: italic;
+  /* 斜体样式 */
+}
+
+.game-selection-button {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 20px;
+  background-color: #3498db;
+  /* 按钮背景色 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.game-selection-button:hover {
+  background-color: #2980b9;
+  /* 悬停效果 */
+}
+
+.recommended-game {
+  font-size: 22px;
+  font-weight: bold;
+  color: #e74c3c;
+  /* 推荐游戏的字体颜色 */
+  margin-top: 20px;
 }
 </style>

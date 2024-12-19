@@ -15,7 +15,6 @@
               <h3>邮箱</h3>
               <p>{{ email }}</p>
             </li>
-
             <li>
               <br>
               <br>
@@ -33,16 +32,15 @@
       <div class="site-info">
         <h2>网站使用资料</h2>
         <div class="card">
-          <ul class="profile-list">
-            <li>
-              <h3>人格类型测试结果</h3>
-              <p>{{ mbti }}</p>
-            </li>
-            <li>
-              <h3>白噪音偏好</h3>
-              <p>{{ whitenoisePreference }}</p>
-            </li>
-          </ul>
+          <div class="mbti">
+            <h3>人格类型测试结果</h3>
+            <p>{{ mbti }}</p>
+          </div>
+          <!-- 白噪音时长柱状图 -->
+          <h3 class="chart-title">白噪音时长</h3>
+          <div class="chart-container">
+            <canvas id="whiteNoiseChart"></canvas>
+          </div>
           <!-- 游戏时长柱状图 -->
           <h3 class="chart-title">游戏时长</h3>
           <div class="chart-container">
@@ -68,39 +66,10 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, L
 // 响应式数据
 const email = ref('');
 const mbti = ref('');
-const whitenoisePreference = ref('');
+const whitenoiseDurations = ref<{ [key: string]: string }>({});
 const gameDurations = ref<{ [key: string]: string }>({});  // 修改类型为string，表示分钟数
 const username = useUserStore().username; // 获取当前用户名
 const gameNames = ['2048', 'memory-match', 'ctr'];
-
-// API 请求函数
-const getEmail = async () => {
-  try {
-    const response = await axios.post('http://localhost:9000/profile/email', { username });
-    email.value = response.data;
-  } catch (error) {
-    console.error('获取邮箱失败:', error);
-  }
-};
-
-const getMbti = async () => {
-  try {
-    const response = await axios.post('http://localhost:9000/profile/mbti', { username });
-    mbti.value = response.data;
-  } catch (error) {
-    console.error('获取MBTI失败:', error);
-  }
-};
-
-const getWhitenoisePreference = async () => {
-  try {
-    const response = await axios.post('http://localhost:9000/profile/whitenoise', { username });
-    whitenoisePreference.value = response.data;
-    console.log('获取白噪音偏好成功:', whitenoisePreference.value);
-  } catch (error) {
-    console.error('获取白噪音偏好失败:', error);
-  }
-};
 
 // 获取所有游戏的游戏时长
 const getGameDuration = async (gameName: string) => {
@@ -133,13 +102,12 @@ const getAllGameDurations = async () => {
     durations[gameName] = convertSecondsToMinutes(gameDurationInSeconds);
   }
   gameDurations.value = durations;
-  renderChart();
 };
 
 // 渲染柱状图
 const renderChart = () => {
-  const ctx = document.getElementById('gameDurationChart') as HTMLCanvasElement;
-  new Chart(ctx, {
+  const gamectx = document.getElementById('gameDurationChart') as HTMLCanvasElement;
+  new Chart(gamectx, {
     type: 'bar',
     data: {
       labels: Object.keys(gameDurations.value),
@@ -176,14 +144,51 @@ const renderChart = () => {
       }
     }
   });
+  const wnctx = document.getElementById('whiteNoiseChart') as HTMLCanvasElement;
+  new Chart(wnctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(whitenoiseDurations.value),
+      datasets: [{
+        label: '白噪音时长（秒）',
+        data: Object.values(whitenoiseDurations.value),
+        backgroundColor: ['#FF6347', '#36A2EB', '#FFCE56'],
+        borderColor: ['#FF6347', '#36A2EB', '#FFCE56'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              const whitenoise = tooltipItem.label;
+              const duration = tooltipItem.raw;
+              return `${whitenoise}: ${duration}秒`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true },
+        y: { beginAtZero: true }
+      }
+    }
+  });
 };
 
 // 获取所有数据
 const getData = async () => {
-  await getEmail();
-  await getMbti();
-  await getWhitenoisePreference();
+  const emailResponse = await axios.post('http://localhost:9000/profile/email', { username });
+  email.value = emailResponse.data;
+  const mbtiResponse = await axios.post('http://localhost:9000/profile/mbti', { username });
+  mbti.value = mbtiResponse.data;
+  const whitenoiseResponse = await axios.post('http://localhost:9000/profile/whitenoise', { username });
+  whitenoiseDurations.value = whitenoiseResponse.data;
   await getAllGameDurations();
+  renderChart();
 };
 
 // 页面挂载时获取数据
@@ -252,13 +257,7 @@ onMounted(() => {
   align-items: center;
 }
 
-.profile-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.profile-list li {
+.mbti {
   margin-bottom: 12px;
   padding: 12px;
   background-color: #f9f9f9;
@@ -266,7 +265,7 @@ onMounted(() => {
   transition: background-color 0.3s;
 }
 
-.profile-list li:hover {
+.mbti:hover {
   background-color: #e0f7fa;
 }
 
@@ -281,7 +280,7 @@ p {
 
 .chart-container {
   max-width: 100%;
-  height: 300px;
+  height: 250px;
   margin-top: 20px;
   /* 图表和内容之间的间距 */
 }

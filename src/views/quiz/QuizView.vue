@@ -5,6 +5,7 @@
       <p>你的人格类型是：{{ getResult() }}</p>
       <p>感谢参与测试！</p>
       <button @click="restartTest">重新测试</button>
+      <button @click="goMenu">返回选择页面</button>
     </div>
     <div v-else>
       <div v-for="(question, index) in questions" :key="index">
@@ -125,6 +126,10 @@ const restartTest = () => {
   };
   testStatus.value = false;
 };
+
+const goMenu = () => {
+  router.push({ name: 'quizselection' });
+}
 
 const getColor = (level: number) => {
   // 根据级别返回对应的颜色

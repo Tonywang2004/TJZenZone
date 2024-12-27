@@ -150,7 +150,7 @@ const openGame = async (gameName) => {
         userName,
         gameType: gameName,
         highestScore: finalScore,
-        gameDuration: totalGameDuration,
+        gameDuration: currentGameDuration,
       };
 
       // 将游戏数据发送到后端

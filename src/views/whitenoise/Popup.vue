@@ -52,7 +52,7 @@
 
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref,onBeforeUnmount } from 'vue';
 import { defineProps } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import {useRouter} from "vue-router";
@@ -84,6 +84,17 @@ const buttons = ref([
   { icon: 'https://defonic.b-cdn.net/defonic/images/icons/ocean.svg', text: 'Boating', audio: 'https://ambicular.com/sounds/defonicprem/rowing160.mp3' },
 
 ]);
+
+// 组件卸载前停止播放
+onBeforeUnmount(() => {
+  if(audioPlayer){
+    backToController();
+    stopAudio();
+    stopTimer();
+  }
+});
+
+
 
 function playOrPause(audioUrl: string, audioName: string) {
   currentAudioName.value = audioName; // 更新当前音频名称
@@ -186,11 +197,6 @@ function backToController(){
 }
 
 function backToMain() {
-  if(audioPlayer){
-    backToController();
-    stopAudio();
-    stopTimer();
-  }
   //返回主页
   router.push({ name: 'home' })
 }

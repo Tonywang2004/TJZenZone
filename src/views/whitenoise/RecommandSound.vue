@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { defineProps, defineEmits } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import {useRouter} from "vue-router";
@@ -59,6 +59,17 @@ const props = defineProps({
 const { selectedEmotion } = props; // 这样你可以直接使用 selectedEmotion 变量
 // 定义要发送给父组件的事件
 const emit = defineEmits(['openPopup', 'openEmotion']);
+
+// 组件卸载前停止播放
+onBeforeUnmount(() => {
+  if(audioPlayer){
+    backToController();
+    stopAudio();
+    stopTimer();
+  }
+});
+
+
 
 function playOrPause(audioUrl: string, audioName: string) {
   currentAudioName.value = audioName; // 更新当前音频名称
@@ -147,28 +158,17 @@ function backToController(){
 
 
 function backToMain() {
-  if(audioPlayer){
-    backToController();
-    stopAudio();
-    stopTimer();
-  }
   //返回主页
   router.push({ name: 'home' })
 }
 
 function popup(emotion) {
-  if(audioPlayer){
-    backToController();
-    stopAudio();
-    stopTimer();
-  }
   //返回白噪声界面Popup.vue
   // 触发父组件的事件，显示 Popup 组件
   emit("openPopup",emotion);
 }
 
 function backToEmotion() {
-  backToController();
   emit("openEmotion");
 }
 </script>

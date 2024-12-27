@@ -133,7 +133,7 @@ const openGame = async (gameName) => {
 
       // 获取游戏结束时的分数
       const localStorageManager = new LocalStorageManager();
-      const finalScore = localStorageManager.getBestScore();
+      let finalScore = localStorageManager.getBestScore();
 
       if (gameName === '2048') {
         const currentScore = getGameCurrentScore(gameWindow); // 获取当前分数

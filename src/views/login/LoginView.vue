@@ -177,11 +177,11 @@ const handleLogin = async () => {
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {
-      alert('登录失败，请重试');
+      alert(response.data.message || '登录失败，请重试');
     }
   } catch (error) {
     console.error('登录失败:', error);
-    alert('网络错误，请稍后再试');
+    alert(error.response.data.message || '网络错误，请稍后再试');
   }
 };
 
@@ -189,16 +189,20 @@ const handleSignup = async () => {
   try {
     const response = await axios.post('http://localhost:9000/myHello/register', form);
     console.log(response.data);
-    if (response.data.message === '注册成功') {
+
+    if (response.data.success) {
+      // 注册成功逻辑
+      alert(response.data.message);
       userStore.logIn();
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {
-      alert('注册失败，请重试');
+      // 注册失败逻辑
+      alert(response.data.message || '注册失败，请重试');
     }
   } catch (error) {
     console.error('注册失败:', error);
-    alert('网络错误，请稍后再试');
+    alert(error.response.data.message || '网络错误，请稍后再试');
   }
 };
 
@@ -211,11 +215,11 @@ const handleResetPasswordEmail = async () => {
       userStore.setUsername(form.username); // 保存 username 到全局状态
       goToHome();
     } else {
-      alert('请求失败，请稍后再试');
+      alert(response.data.message || '请求失败，请稍后再试');
     }
   } catch (error) {
     console.error('重置密码失败:', error);
-    alert('网络错误，请稍后再试');
+    alert(error.response.data.message || '网络错误，请稍后再试');
   }
 };
 

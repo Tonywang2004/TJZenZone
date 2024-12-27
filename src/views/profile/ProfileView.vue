@@ -9,10 +9,10 @@
           <ul class="profile-list">
             <li>
               <h3>用户名</h3>
-              <p>{{ username }}
+              <div>{{ username }}
               <p v-if="role === 'researcher'" class="role-label">研究人员</p>
               <p v-else class="role-label other-role">普通用户</p>
-              </p>
+              </div>
               <!-- 根据角色动态显示标签 -->
             </li>
             <li>
@@ -21,14 +21,14 @@
             </li>
             <li>
               <!-- 动态显示跳转链接 -->
-              <p v-if="role === 'researcher'">
+              <div v-if="role === 'researcher'">
               <h3>网站数据</h3>
               <a href="/faa#/webData" class="data-link">查看网站数据</a>
-              </p>
-              <p v-else>
+              </div>
+              <div v-else>
               <h3>定期报告</h3>
-              <a href="/regular-reports" class="data-link">查看个人定期报告</a>
-              </p>
+              <a href="/faa#/PersonalReport" class="data-link">查看个人定期报告</a>
+              </div>
             </li>
           </ul>
         </div>
@@ -273,13 +273,6 @@ onMounted(() => {
 .profile-info {
   width: 50%;
   text-align: left;
-}
-
-.charts {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .mbti {

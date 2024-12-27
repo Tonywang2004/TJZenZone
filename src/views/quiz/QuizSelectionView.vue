@@ -13,8 +13,8 @@ import axios from 'axios';
 import router from '@/router';
 import { useUserStore } from '@/store/userStore';
 
-const quizNames = ref<{ name: string; id: number }[]>([]);
-const buttonText = ref<string[]>();
+const quizNames = ref<{ name: string; id: number }[]>([{name:"MBTI小测试",id:1},{name:"MBTI进阶测试",id:2}]);
+const buttonText = ref<string[]>(["开始测试","开始测试"]);
 
 const enterTest = (id: number) => {
     router.push({ name: 'quiz', params: { id: id } });

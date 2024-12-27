@@ -8,6 +8,7 @@ import QuizSelectionView from '@/views/quiz/QuizSelectionView.vue'
 import UserView from '@/views/user/UserView.vue'
 import GameView from '@/views/game/GameView.vue'
 import webData from '@/views/profile/webData.vue'
+import PersonalReport from "@/views/profile/PersonalReport.vue";
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
@@ -77,6 +78,11 @@ const router = createRouter({
                     name: 'webData',
                     path: '/webData',
                     component: webData
+                },
+                {
+                    name: 'PersonalReport',
+                    path: '/PersonalReport',
+                    component: PersonalReport
                 },
             ],
         },

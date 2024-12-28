@@ -5,8 +5,8 @@
       <h3>个人使用数据统计</h3>
       <br>
       <p>当前报告显示了</p>
-      <p>{{times[0]}} 到</p>
-      <p>{{times[1]}} 的信息</p>
+      <p>{{ times[0] }} 到</p>
+      <p>{{ times[1] }} 的信息</p>
       <div class="navigation-buttons">
         <button @click="goBack()" class="nav-btn">返回个人主页</button>
       </div>
@@ -24,7 +24,7 @@
                       style="margin: 30px;"
       />
       <div class="info">
-        <h3>游戏时长数据统计</h3>
+        <h3>您的游戏时长数据</h3>
         <p>本部分展示了您在不同游戏中的总时长数据。
           通过此数据，您可以了解自己玩哪个游戏的时间最长。 </p>
       </div>
@@ -32,7 +32,7 @@
         <canvas id="gameDurationChart"/>
       </div>
       <div class="info">
-        <h3>网站白噪声时长数据</h3>
+        <h3>您的白噪声时长数据</h3>
         <p>
           本部分展示了您使用不同类型白噪音的总时长数据。
           白噪音是帮助用户放松和集中注意力的有效工具，广泛应用于冥想、学习、睡眠等场景。
@@ -42,7 +42,13 @@
       <div class="charts">
         <canvas id="whiteNoiseChart"/>
       </div>
-      <div></div>
+      <div class="info">
+        <h3>您的情绪频率数据</h3>
+        <p>本部分展示了您使用本网站时产生各情绪的次数。</p>
+      </div>
+      <div class="charts">
+        <canvas id="emotionChart"/>
+      </div>
     </div>
   </div>
 </template>
@@ -57,9 +63,11 @@ import {useUserStore} from '@/store/userStore'
 const username = useUserStore().username;
 const gameDurations = ref<{ [gameType: string]: number }>({});  // 存储每个游戏的总时长
 const whitenoiseDurations = ref<{ [type: string]: string }>({});//存储每种白噪声类型的总时长
+const emotions = ref<{ [type: string]: string }>({});//存储每种情绪声类型的频率
 const times = ref(['2024-01-01 00:00:00', '2024-12-30 00:00:00'])
 let gameChart: Chart | undefined = undefined;
 let whitenoiseChart: Chart | undefined = undefined;
+let emotionChart: Chart | undefined = undefined;
 
 const chartOption = {
   responsive: true,
@@ -89,6 +97,17 @@ const getWhitenoiseDuration = async () => {
         endTime: times.value[1],
       });
   whitenoiseDurations.value = response.data;
+};
+
+// 获取单个用户的情绪
+const getEmotion = async () => {
+  const response = await axios.post('http://localhost:9000/profile/timedEmotion',
+      {
+        username: username,
+        startTime: times.value[0],
+        endTime: times.value[1],
+      });
+  emotions.value = response.data;
 };
 
 const updateGameChart = () => {
@@ -126,7 +145,7 @@ const updateWhiteNoiseChart = () => {
   if (ctx) {
     const labels = Object.keys(whitenoiseDurations.value);
     const durations = Object.values(whitenoiseDurations.value);
-    const colors = ['#4CAF50', '#FFC107', '#03A9F4', '#9C27B0', '#FF5722']; // 白噪音图表颜色数组\
+    const colors = ['#4CAF50', '#FFC107', '#03A9F4', '#9C27B0', '#FF5722']; // 白噪音图表颜色数组
     const newData = {
       labels: labels,
       datasets: [{
@@ -151,13 +170,43 @@ const updateWhiteNoiseChart = () => {
   }
 };
 
-const refreshReport = async () => {
-  if (times.value && times.value[0] !== null && times.value[1] !== null) {
-    await getGameDuration();
-    await getWhitenoiseDuration();
-    updateGameChart();
-    updateWhiteNoiseChart();
+const updateEmotionChart = () => {
+  const ctx = document.getElementById('emotionChart') as HTMLCanvasElement;
+  if (ctx) {
+    const labels = Object.keys(emotions.value);
+    const frequencies = Object.values(emotions.value);
+    const colors = ['#9C27B0', '#FF5722', '#FFC107', '#03A9F4', '#4CAF50']; // 情绪图表颜色数组
+    const newData = {
+      labels: labels,
+      datasets: [{
+        label: '情绪频率(次)',
+        data: frequencies,
+        backgroundColor: frequencies.map((_, index) => colors[index % colors.length]),
+        borderColor: '#333',
+        borderWidth: 1,
+        barPercentage: 0.8,
+      }]
+    };
+    if (emotionChart == undefined) {
+      emotionChart = new Chart(ctx, {
+        type: 'bar',
+        data: newData,
+        options: chartOption
+      });
+    } else {
+      emotionChart.data = newData;
+      emotionChart.update();
+    }
   }
+};
+
+const refreshReport = async () => {
+  await getGameDuration();
+  await getWhitenoiseDuration();
+  await getEmotion();
+  updateGameChart();
+  updateWhiteNoiseChart();
+  updateEmotionChart();
 }
 
 const goBack = () => {

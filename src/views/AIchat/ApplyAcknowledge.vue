@@ -9,6 +9,9 @@
         <div class="flex text-[16px] font-bold leading-none ml-[60px]">
           <p>当前用户:{{username}}</p>
         </div>
+        <div class="flex text-[16px] font-bold leading-none ml-[60px]">
+          <p>当前情绪：{{ mood }}</p>
+        </div>
         <div class="chat-container">
             <div class="chat-item">
                 <div class="chat-answer">
@@ -36,11 +39,13 @@
               </audio>
             </div>
            </div>
+            <el-button type="primary" @click="open">设置情绪</el-button>
             <el-button type="primary" id="start-btn" @click="startRecognition">开始语音输入</el-button>
-            <el-button type="primary" @click="changemethod">{{auto}}</el-button>
-            <el-button type="primary" v-if="auto==='手动发送'" @click="sendmessage">发送</el-button>
             <el-button type="primary" @click="savemessage">保存对话</el-button>
             <el-button type="primary" @click="showmessage">查看上一次对话</el-button>
+            <el-button type="primary" @click="changemethod">{{auto}}</el-button>
+            <el-button type="primary" v-if="auto==='手动发送'" @click="sendmessage">发送</el-button>
+
             <div>
               <p></p>
               <el-input v-model="result" :disabled="auto==='自动发送'" style="width: 100%" placeholder="Please input" />
@@ -50,9 +55,9 @@
 </template>
 <script setup lang="ts">
 import { useConfig } from '@/composables/config';
-import {ref} from 'vue'
+import {ref, onMounted,watch} from 'vue'
 import axios from 'axios'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElButton } from 'element-plus'
 import { useUserStore } from '@/store/userStore';
 
 const start="你好！有什么我能帮助你的吗？\n"
@@ -62,6 +67,7 @@ const user=useUserStore()
 const username=ref(user.username)
 //添加信息使用.push
 const messages=ref(user.messages)
+const mood=ref(user.mood)
 const audiourllist=ref(user.audiourllist)
 const audioBlob = ref<Blob | null>(null);
 const audioUrl = ref<string | null>(null);
@@ -158,7 +164,6 @@ const changemethod=()=>{
 
 const sendmessage=()=>{
   messages.value.push({"role": "user", "content": result.value});
-
   axios.post("http://localhost:9000/chat/send",messages.value).then(res=>{
     messages.value.push({"role": "system", "content": res.data});
     fetchAndPlayAudio(res.data)
@@ -225,6 +230,27 @@ const showmessage=()=>{
       })
     }
   })
+}
+const open = () => {
+  ElMessageBox.prompt('你当前的情绪为', 'Tip', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+  })
+    .then(({ value }) => {
+      user.setMood(value);
+      mood.value=value;
+      axios.post("http://localhost:9000/chat/getMood",{"mood":mood.value})
+      ElMessage({
+        type: 'success',
+        message: `你当前的情绪是${value}`,
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消更改',
+      })
+    })
 }
 </script>
 <style lang="less" scoped>

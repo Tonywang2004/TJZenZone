@@ -10,8 +10,8 @@
             <li>
               <h3>用户名</h3>
               <div>{{ username }}
-              <p v-if="role === 'researcher'" class="role-label">研究人员</p>
-              <p v-else class="role-label other-role">普通用户</p>
+                <p v-if="role === 'researcher'" class="role-label">研究人员</p>
+                <p v-else class="role-label other-role">普通用户</p>
               </div>
               <!-- 根据角色动态显示标签 -->
             </li>
@@ -22,12 +22,12 @@
             <li>
               <!-- 动态显示跳转链接 -->
               <div v-if="role === 'researcher'">
-              <h3>网站数据</h3>
-              <a href="/faa#/webData" class="data-link">查看网站数据</a>
+                <h3>网站数据</h3>
+                <a href="/faa#/webData" class="data-link">查看网站数据</a>
               </div>
               <div v-else>
-              <h3>定期报告</h3>
-              <a href="/faa#/PersonalReport" class="data-link">查看个人定期报告</a>
+                <h3>定期报告</h3>
+                <a href="/faa#/PersonalReport" class="data-link">查看个人定期报告</a>
               </div>
             </li>
           </ul>
@@ -56,6 +56,13 @@
               <canvas id="gameDurationChart"></canvas>
             </div>
           </div>
+          <!--情绪柱状图 -->
+          <div class="chart-section">
+            <h3 class="chart-title">情绪频率</h3>
+            <div class="chart-container">
+              <canvas id="emotionChart"></canvas>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -63,21 +70,20 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/store/userStore';
+import {useUserStore} from '@/store/userStore';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title, BarController } from 'chart.js';
+import {onMounted, ref} from 'vue';
+import {Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title, BarController} from 'chart.js';
+
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 
 // 响应式数据
 const email = ref('');
 const mbti = ref('');
-const whitenoiseDurations = ref<{ [key: string]: string }>({});
-const gameDurations = ref<{ [key: string]: string }>({});  // 修改类型为string，表示分钟数
+const whitenoiseDurations = ref<{ [key: string]: number }>({});
+const gameDurations = ref<{ [key: string]: number }>({});
+const emotions = ref<{ [key: string]: number }>({});
 const username = useUserStore().username; // 获取当前用户名
-// const username = "we"; // 获取当前用户名
-
-const gameNames = ['2048', 'memory-match', 'ctr'];
 const role = ref('');
 
 // 获取用户角色
@@ -92,54 +98,18 @@ const fetchUserRole = async (username: string) => {
     console.error('获取用户角色失败:', error);
   }
 };
-// 获取所有游戏的游戏时长
-const getGameDuration = async (gameName: string) => {
-  try {
-    const response = await axios.get(`http://localhost:9000/api/gamestate/${username}/${gameName}`);
-    return response.data.gameDuration || 0;
-  } catch (error) {
-    console.error(`获取【${gameName}】游戏时长失败`, error);
-    return 0;
-  }
-};
-
-// 转换秒数为分钟
-const convertSecondsToMinutes = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  let timeString = `${minutes}分钟`;
-  if (remainingSeconds > 0) {
-    timeString += ` ${remainingSeconds}秒`;
-  }
-
-  return timeString;
-};
-
-const getAllGameDurations = async () => {
-  const durations: { [key: string]: string } = {};  // 明确声明durations的类型
-  for (const gameName of gameNames) {
-    const gameDurationInSeconds = await getGameDuration(gameName);
-    durations[gameName] = convertSecondsToMinutes(gameDurationInSeconds);
-  }
-  gameDurations.value = durations;
-};
 
 // 渲染柱状图
-const renderChart = () => {
-  const gamectx = document.getElementById('gameDurationChart') as HTMLCanvasElement;
-  new Chart(gamectx, {
+const renderChart = (ctxId: string, label: string, dataValues: { [key: string]: number }, isDuration : boolean) => {
+  const ctx = document.getElementById(ctxId) as HTMLCanvasElement;
+  const chartData = isDuration ? Object.values(dataValues).map(time => time / 60) : Object.values(dataValues);
+  new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: Object.keys(gameDurations.value),
+      labels: Object.keys(dataValues),
       datasets: [{
-        label: '游戏时长（分钟）',
-        data: Object.values(gameDurations.value).map(time => {
-          const [minutes, seconds] = String(time).split(' ');  // 将时间转换为字符串后拆分
-          const minutesNum = parseInt(minutes);
-          const secondsNum = seconds ? parseInt(seconds) : 0;
-          return minutesNum + (secondsNum / 60);  // 将秒数转化为分钟并加上
-        }),
+        label: label,
+        data: chartData,
         backgroundColor: ['#FF6347', '#36A2EB', '#FFCE56'],
         borderColor: ['#FF6347', '#36A2EB', '#FFCE56'],
         borderWidth: 1
@@ -152,44 +122,10 @@ const renderChart = () => {
         tooltip: {
           callbacks: {
             label: (tooltipItem) => {
-              const game = tooltipItem.label;
+              const itemLabel = tooltipItem.label;
               const duration = tooltipItem.raw as number;  // 强制转换为数字类型
-              return `${game}: ${duration.toFixed(2)}分钟`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: { beginAtZero: true },
-        y: { beginAtZero: true }
-      }
-    }
-  });
-
-
-  const wnctx = document.getElementById('whiteNoiseChart') as HTMLCanvasElement;
-  new Chart(wnctx, {
-    type: 'bar',
-    data: {
-      labels: Object.keys(whitenoiseDurations.value),
-      datasets: [{
-        label: '白噪音时长（秒）',
-        data: Object.values(whitenoiseDurations.value),
-        backgroundColor: ['#FF6347', '#36A2EB', '#FFCE56'],
-        borderColor: ['#FF6347', '#36A2EB', '#FFCE56'],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: (tooltipItem) => {
-              const whitenoise = tooltipItem.label;
-              const duration = tooltipItem.raw;
-              return `${whitenoise}: ${duration}秒`;
+              return isDuration ? `${itemLabel}: ${duration.toFixed(2)}分钟`
+                  : `${itemLabel}: ${duration}次`;
             }
           }
         }
@@ -204,15 +140,20 @@ const renderChart = () => {
 
 // 获取所有数据
 const getData = async () => {
-  const emailResponse = await axios.post('http://localhost:9000/profile/email', { username });
+  const emailResponse = await axios.post('http://localhost:9000/profile/email', {username});
   email.value = emailResponse.data;
-  const mbtiResponse = await axios.post('http://localhost:9000/profile/mbti', { username });
+  const mbtiResponse = await axios.post('http://localhost:9000/profile/mbti', {username});
   mbti.value = mbtiResponse.data;
-  const whitenoiseResponse = await axios.post('http://localhost:9000/profile/whitenoise', { username });
+  const whitenoiseResponse = await axios.post('http://localhost:9000/profile/whitenoise', {username});
   whitenoiseDurations.value = whitenoiseResponse.data;
-  console.log('获取用户邮箱成功:', whitenoiseResponse.data);
-  await getAllGameDurations();
-  renderChart();
+  const gameResponse = await axios.post(`http://localhost:9000/profile/gametime`, {username: username});
+  gameDurations.value = gameResponse.data;
+  const emotionResponse = await axios.post('http://localhost:9000/profile/emotion', {username: username});
+  emotions.value = emotionResponse.data;
+  renderChart('gameDurationChart', '游戏时长（分钟）', gameDurations.value, true);
+  renderChart('whiteNoiseChart', '白噪音时长（分钟）', whitenoiseDurations.value, true);
+  renderChart('emotionChart', '情绪频率', emotions.value, false);
+
 };
 
 // 页面挂载时获取数据
@@ -298,7 +239,7 @@ p {
 
 .chart-container {
   max-width: 100%;
-  height: 250px;
+  height: 235px;
   margin-top: 20px;
   /* 图表和内容之间的间距 */
 }

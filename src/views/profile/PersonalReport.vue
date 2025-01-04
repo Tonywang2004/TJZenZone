@@ -110,48 +110,72 @@ const getEmotion = async () => {
   emotions.value = response.data;
 };
 
-const updateChart = (canvasId: string, chart: Chart | undefined, data: { [type: string]: number }, labelText: string, colors: string[]) => {
-  const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
-  const dataValues = Object.values(data);
-  if (ctx) {
-    const newData = {
-      labels: Object.keys(data),
-      datasets: [{
-        label: labelText,
-        data: dataValues,
-        backgroundColor: dataValues.map((_, index) => colors[index % colors.length]),
-        borderColor: '#333',
-        borderWidth: 1,
-        barPercentage: 0.8,
-      }]
-    };
+const chartDataGen = (data: { [type: string]: number }, labelText: string, colors: string[]) => {
+  return {
+    labels: Object.keys(data),
+    datasets: [{
+      label: Object.keys(data).length === 0 ? "暂无数据" : labelText,
+      data: Object.values(data),
+      backgroundColor: Object.values(data).map((_, index) => colors[index % colors.length]),
+      borderColor: '#333',
+      borderWidth: 1,
+      barPercentage: 0.8,
+    }]
+  };
+}
 
-    if (chart === undefined) {
-      chart = new Chart(ctx, {
+const updateGameChart = () => {
+  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#57FF33', '#FF8C00']; // 游戏图表颜色数组
+  const ctx = document.getElementById('gameDurationChart') as HTMLCanvasElement;
+  if (ctx) {
+    const chartData = chartDataGen(gameDurations.value, '游戏时长(秒)', colors);
+    if (gameChart === undefined) {
+      gameChart = new Chart(ctx, {
         type: 'bar',
-        data: newData,
+        data: chartData,
         options: chartOption
       });
     } else {
-      chart.data = newData;
-      chart.update();
+      gameChart.data = chartData;
+      gameChart.update();
     }
   }
 };
 
-const updateGameChart = () => {
-  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#57FF33', '#FF8C00']; // 游戏图表颜色数组
-  updateChart('gameDurationChart', gameChart, gameDurations.value, '游戏时长(秒)', colors);
-};
-
 const updateWhiteNoiseChart = () => {
   const colors = ['#4CAF50', '#FFC107', '#03A9F4', '#9C27B0', '#FF5722']; // 白噪音图表颜色数组
-  updateChart('whiteNoiseChart', whitenoiseChart, whitenoiseDurations.value, '白噪声时长(秒)', colors);
+  const ctx = document.getElementById('whiteNoiseChart') as HTMLCanvasElement;
+  if (ctx) {
+    const chartData = chartDataGen(whitenoiseDurations.value, '白噪声时长(秒)', colors);
+    if (whitenoiseChart === undefined) {
+      whitenoiseChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: chartOption
+      });
+    } else {
+      whitenoiseChart.data = chartData;
+      whitenoiseChart.update();
+    }
+  }
 };
 
 const updateEmotionChart = () => {
   const colors = ['#9C27B0', '#FF5722', '#FFC107', '#03A9F4', '#4CAF50']; // 情绪图表颜色数组
-  updateChart('emotionChart', emotionChart, emotions.value, '情绪频率(次)', colors);
+  const ctx = document.getElementById('emotionChart') as HTMLCanvasElement;
+  if (ctx) {
+    const chartData = chartDataGen(emotions.value, '情绪频率(次)', colors);
+    if (emotionChart === undefined) {
+      emotionChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: chartOption
+      });
+    } else {
+      emotionChart.data = chartData;
+      emotionChart.update();
+    }
+  }
 };
 
 const refreshReport = async () => {

@@ -84,7 +84,7 @@ const submitTest = async () => {
         answers.value.J -= selection; // 认同程度减少到J
       }
     } else {
-      alert("请选择答案");
+      alert("第"+ (i+1) +"题未作答，请选择答案");
       return;
     }
   }

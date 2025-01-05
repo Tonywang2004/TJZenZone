@@ -67,7 +67,7 @@
 
       <!-- 情绪数据部分 -->
       <div v-if="currentView === 'emotion'" class="chart-section">
-        <h3>网站白噪声时长数据</h3>
+        <h3>网站用户情绪频次数据</h3>
         <canvas id="emotionChart"></canvas>
         <div>
             本部分展示了用户情绪的频次数据。通过此数据，可以了解用户在使用本网站时的情绪趋势。
